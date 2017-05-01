@@ -1,0 +1,63 @@
+input[type="range"] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%;
+    width: calc(100% + #{rem(16)}); /* Specific width is required for Firefox. */
+    margin-left: rem(-8);
+    margin-right: rem(-8);
+    background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+  outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  cursor: pointer;
+
+  /* Hides the slider so custom styles can be added */
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border: none;
+    height: rem(14);
+    width: rem(16);
+    cursor: pointer;
+    box-shadow: none;
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border: none;
+    height: rem(14);
+    width: rem(16);
+    cursor: pointer;
+    box-shadow: none;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border: none;
+    height: rem(14);
+    width: rem(16);
+    cursor: pointer;
+    box-shadow: none;
+}

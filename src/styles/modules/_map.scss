@@ -1,0 +1,275 @@
+@include new('map') {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+
+    @include bp(em(480)) {
+        left: -20%;
+        right: -20%;
+        width: 140%;
+    }
+
+    @include has('container') {
+        height: 0;
+        padding-bottom: percentage(410/960);
+        position: relative;
+        width: 100%;
+
+        @include bp(em(480)) {
+            padding-bottom: percentage(410/686);
+        }
+    }
+
+    @include has('timeline') {
+        padding: 0 rem(200);
+        position: relative;
+
+        @include bp(em(1080)) {
+            padding: 0 rem(100);
+        }
+
+        @include bp(em(720)) {
+            padding: 0 rem(40);
+        }
+
+        @include bp(em(480)) {
+            padding: 0 rem(20);
+        }
+    }
+
+    @include has('key') {
+        text-align: center;
+
+        @include bp(em(850)) {
+            margin-bottom: rem(20);
+        }
+    }
+
+    @include has('key-item') {
+        border: 1px solid transparent;
+        border-radius: rem(30);
+        display: inline-block;
+        font-size: rem(18);
+        height: rem(18);
+        line-height: rem(18);
+        margin-left: rem(20);
+        margin-right: rem(20);
+        padding: rem(5) rem(20) rem(5) rem(5);
+        transition: all 350ms;
+
+        &:before {
+            border-radius: 50%;
+            content: "";
+            display: block;
+            float: left;
+            height: rem(18);
+            margin-right: rem(18);
+            transition: background 350ms;
+            width: rem(18);
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        &.active {
+            color: $white;
+
+            &:hover,
+            &:active,
+            &:focus {
+                cursor: default;
+                text-decoration: none;
+            }
+        }
+
+        @include when('sending') {
+            border-color: $grey;
+
+            &:hover,
+            &:active,
+            &:focus {
+                background: $grey;
+                color: $white;
+
+                &:before {
+                    background: $white;
+                }
+            }
+
+            &:before {
+                background: $grey;
+            }
+
+            &.active {
+                background: $grey;
+
+                &:before {
+                    background: $white;
+                }
+            }
+        }
+
+        @include when('receiving') {
+            border-color: $gold;
+
+            &:hover,
+            &:active,
+            &:focus {
+                background: $gold;
+                color: $white;
+
+                &:before {
+                    background: $white;
+                }
+            }
+
+            &:before {
+                background: $gold;
+            }
+
+            &.active {
+                background: $gold;
+
+                &:before {
+                    background: $white;
+                }
+            }
+        }
+
+        @include bp(em(720)) {
+            display: block;
+            margin: 0 auto rem(10);
+            width: rem(220);
+        }
+    }
+ 
+    @include has('start') {
+        cursor: pointer;
+        margin-bottom: rem(5);
+        
+        &:hover,
+        &:active,
+        &:focus {
+            .map__start-text {
+                border-bottom-color: $text;
+            }
+        }
+    }
+
+    @include has('start-icon') {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16.67 16.67'%3E%3Ctitle%3Eicon_play%3C/title%3E%3Cpolygon fill='%232d2d2d' points='13.39 8.33 5.28 13.02 5.28 3.65 13.39 8.33'/%3E%3Ccircle fill='none' stroke='%232d2d2d' stroke-miterlimit='10' cx='8.33' cy='8.33' r='7.83'/%3E%3C/svg%3E");
+        background-position: left middle;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        background-size: 100% 100%;
+        display: inline-block;
+        height: rem(16);
+        margin-right: rem(6);
+        vertical-align: middle;
+        width: rem(16);
+
+        .pause & {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.667px' height='16.667px' viewBox='0 0 16.667 16.667' enable-background='new 0 0 16.667 16.667' xml:space='preserve'%3E%3Ccircle fill='none' stroke='%232D2E2D' stroke-miterlimit='10' cx='8.333' cy='8.334' r='7.833'/%3E%3Cline fill='none' stroke='%232D2E2D' stroke-width='2' stroke-miterlimit='10' x1='6.333' y1='4.166' x2='6.333' y2='12.5'/%3E%3Cline fill='none' stroke='%232D2E2D' stroke-width='2' stroke-miterlimit='10' x1='10.333' y1='4.166' x2='10.333' y2='12.5'/%3E%3C/svg%3E");
+        }
+
+        .reset & {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.667px' height='16.667px' viewBox='0 0 16.667 16.667' enable-background='new 0 0 16.667 16.667' xml:space='preserve'%3E%3Ccircle fill='none' stroke='%232D2E2D' stroke-miterlimit='10' cx='8.333' cy='8.334' r='7.833'/%3E%3Cg%3E%3Cg%3E%3Cpath fill='none' stroke='%232D2E2D' stroke-linecap='square' stroke-miterlimit='10' d='M10.456,12.063 c-0.626,0.357-1.351,0.562-2.123,0.562c-2.37,0-4.292-1.921-4.292-4.292s1.921-4.292,4.292-4.292s4.292,1.921,4.292,4.292'/%3E%3Cg%3E%3Cpolygon fill='%232D2E2D' points='15.061,8.007 10.201,8.007 12.631,10.437 '/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    }
+
+    @include has('start-text') {
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+        display: inline-block;
+        font-size: rem(16);
+        font-weight: 300;
+        transition: border 350ms;
+        vertical-align: middle;
+    }
+
+    @include has('years') {
+        list-style-type: none;
+        margin-bottom: rem(34);
+        margin-top: rem(10);
+        text-align: center;
+    }
+
+    @include has('year-marker') {
+        display: inline-block;
+        position: relative;
+        width: percentage(1/8);
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        &:before {
+            background: $text;
+            content: "";
+            display: block;
+            height: rem(12);
+            left: 50%;
+            margin-top: rem(10);
+            position: absolute;
+            top: 100%;
+            width: rem(1);
+        }
+
+        &:after {
+            background: $text;
+            content: "";
+            display: block;
+            height: rem(1);
+            left: 50%;
+            margin-left: rem(-7);
+            margin-top: rem(22);
+            position: absolute;
+            top: 100%;
+            width: rem(14);
+        }
+
+        &:first-child {
+            text-align: left;
+            width: percentage(1/16);
+
+            &:before {
+                left: 0;
+            }
+
+            &:after {
+                left: 0;
+                margin-left: 0;
+                width: rem(7);
+            }
+        }
+
+        &:last-child {
+            text-align: right;
+            width: percentage(1/16);
+
+            &:before {
+                left: 100%;
+            }
+
+            &:after {
+                left: 100%;
+                width: rem(7);
+            }
+        }
+
+        @include bp(em(480)) {
+            font-size: rem(10);
+        }
+    }
+}

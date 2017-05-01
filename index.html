@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+    <html xmlns:og="http://opengraphprotocol.org/schema/">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />        
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable = yes" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Unequal exchanges</title>
+        <link rel="stylesheet" type="text/css" href="dist/css/index.css" />
+        <script src="https://use.typekit.net/jlc4hvm.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    </head>
+
+    <body>
+        <div class="map__container">
+            <svg width="100%" height="100%" viewBox="0 0 960 410" id="map" class="map">
+                <defs>
+                    <filter id="dropshadow" height="130%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> <!-- stdDeviation is how much to blur -->
+                        <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
+                        <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
+                            <feFuncA type="linear" slope="0.2"/>
+                        </feComponentTransfer>
+                        <feMerge> 
+                            <feMergeNode/> <!-- this contains the offset blurred image -->
+                            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+                        </feMerge>
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+        <div class="map__timeline">
+            <div class="map__key">
+                <a class="map__key-item map__key-item--receiving active">Receiving countries</a>
+                <a class="map__key-item map__key-item--sending">Sending countries</a>
+            </div>
+            <a class="map__start">
+                <span class="map__start-icon"></span>
+                <span class="map__start-text">Animate</span>
+            </a>
+            <ol class="map__years">
+                <li class="map__year-marker" data-year="2010">2010
+                </li><li class="map__year-marker" data-year="2011">2011
+                </li><li class="map__year-marker" data-year="2012">2012
+                </li><li class="map__year-marker" data-year="2013">2013
+                </li><li class="map__year-marker" data-year="2014">2014
+                </li><li class="map__year-marker" data-year="2015">2015
+                </li><li class="map__year-marker" data-year="2016">2016
+                </li><li class="map__year-marker" data-year="2017">2017
+                </li><li class="map__year-marker" data-year="2018">2018
+            </li></ol>
+            <input type="range" value="2010" step="1" min="2010" max="2018" class="map__year-tracker" />
+        </div>
+        <script src="dist/javascript/index.js"></script>
+    </body>
+</html>
