@@ -12,44 +12,46 @@
     </head>
 
     <body>
-        <div class="map__container">
-            <svg width="100%" height="100%" viewBox="0 0 960 410" id="map" class="map">
-                <defs>
-                    <filter id="dropshadow" height="130%">
-                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> <!-- stdDeviation is how much to blur -->
-                        <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
-                        <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
-                            <feFuncA type="linear" slope="0.2"/>
-                        </feComponentTransfer>
-                        <feMerge> 
-                            <feMergeNode/> <!-- this contains the offset blurred image -->
-                            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
-                        </feMerge>
-                    </filter>
-                </defs>
-            </svg>
-        </div>
-        <div class="map__timeline">
-            <div class="map__key">
-                <a class="map__key-item map__key-item--receiving active">Receiving countries</a>
-                <a class="map__key-item map__key-item--sending">Sending countries</a>
+        <div class="map__infographic">
+            <div class="map__container">
+                <svg width="100%" height="100%" viewBox="0 0 960 410" id="map" class="map">
+                    <defs>
+                        <filter id="dropshadow" height="130%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3"/> <!-- stdDeviation is how much to blur -->
+                            <feOffset dx="0" dy="0" result="offsetblur"/> <!-- how much to offset -->
+                            <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
+                                <feFuncA type="linear" slope="0.2"/>
+                            </feComponentTransfer>
+                            <feMerge> 
+                                <feMergeNode/> <!-- this contains the offset blurred image -->
+                                <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+                            </feMerge>
+                        </filter>
+                    </defs>
+                </svg>
             </div>
-            <a class="map__start">
-                <span class="map__start-icon"></span>
-                <span class="map__start-text">Animate</span>
-            </a>
-            <ol class="map__years">
-                <li class="map__year-marker" data-year="2010">2010
-                </li><li class="map__year-marker" data-year="2011">2011
-                </li><li class="map__year-marker" data-year="2012">2012
-                </li><li class="map__year-marker" data-year="2013">2013
-                </li><li class="map__year-marker" data-year="2014">2014
-                </li><li class="map__year-marker" data-year="2015">2015
-                </li><li class="map__year-marker" data-year="2016">2016
-                </li><li class="map__year-marker" data-year="2017">2017
-                </li><li class="map__year-marker" data-year="2018">2018
-            </li></ol>
-            <input type="range" value="2010" step="1" min="2010" max="2018" class="map__year-tracker" />
+            <div class="map__timeline">
+                <div class="map__key">
+                    <a class="map__key-item map__key-item--receiving active">Receiving countries</a>
+                    <a class="map__key-item map__key-item--sending">Sending countries</a>
+                </div>
+                <a class="map__start">
+                    <span class="map__start-icon"></span>
+                    <span class="map__start-text">Animate</span>
+                </a>
+                <ol class="map__years">
+                    <li class="map__year-marker" data-year="2010">2010
+                    </li><li class="map__year-marker" data-year="2011">2011
+                    </li><li class="map__year-marker" data-year="2012">2012
+                    </li><li class="map__year-marker" data-year="2013">2013
+                    </li><li class="map__year-marker" data-year="2014">2014
+                    </li><li class="map__year-marker" data-year="2015">2015
+                    </li><li class="map__year-marker" data-year="2016">2016
+                    </li><li class="map__year-marker" data-year="2017">2017
+                    </li><li class="map__year-marker" data-year="2018">2018
+                </li></ol>
+                <input type="range" value="2010" step="1" min="2010" max="2018" class="map__year-tracker" />
+            </div>
         </div>
         <script src="dist/javascript/index.js"></script>
     </body>

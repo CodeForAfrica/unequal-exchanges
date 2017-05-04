@@ -4,6 +4,7 @@ import * as topojson                    from 'topojson'
 import world                            from '../data/countries.json'
 import moneyData                        from '../data/map.json'
 import countryNames                     from '../data/country-names.json'
+import throttle                         from '../utils/throttle.js'
 
 const COLOR_BG = '#EAEAEA'
 const COLOR_GREY = '#4F4F5B'
@@ -32,11 +33,16 @@ class Map {
         this.circleGroups = null
         this.overlay = null
         this.startText = $('.map__start-text')
+        this.$window = $(window)
+        this.$infographic = $('.map__infographic')
+        this.$timeline = $('.map__timeline')
+        this.$container = $('.map__container')
     }
 
     init() {
         this.svg.append('rect').attr('width', WIDTH).attr('height', HEIGHT).attr('fill', COLOR_BG)
         this.drawMap()
+        this.checkHeight()
 
         this.$start.on('click', this.timeline.bind(this))
 
@@ -49,6 +55,24 @@ class Map {
         this.$yearTracker.on('change', () => {
             this.moveToYear(this.$yearTracker.val())
         })
+
+        throttle('resize', 'resize.map')
+        this.$window.on('resize.map', () => {
+            this.checkHeight()
+        })
+    }
+
+    checkHeight() {
+        const WINDOW_HEIGHT = this.$window.outerHeight()
+        if (this.$infographic.outerHeight() > WINDOW_HEIGHT) {
+            const CONTAINER_HEIGHT = this.$container.outerHeight()
+            console.log(WINDOW_HEIGHT, CONTAINER_HEIGHT)
+            this.$infographic.css('height', WINDOW_HEIGHT > CONTAINER_HEIGHT ? WINDOW_HEIGHT : CONTAINER_HEIGHT)
+            this.$timeline.addClass('absolute')
+        } else {
+            this.$infographic.removeAttr('style')
+            this.$timeline.removeClass('absolute')
+        }
     }
 
     switchMode(e) {
@@ -141,12 +165,12 @@ class Map {
             .attr('opacity', 0.7)
     }
 
-    hideOverlay(d, i) {
+    hideOverlay(d) {
         d3.select(`#overlay-${d.id}`).remove()
     }
 
-    showOverlay(d, i) {
-        if (window.matchMedia("(max-width: 640px)").matches) {
+    showOverlay(d) {
+        if (window.matchMedia('(max-width: 640px)').matches) {
             return
         }
         const X = parseInt($(`[data-country="${d.country}"]`).data('x'))
