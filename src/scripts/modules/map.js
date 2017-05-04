@@ -104,6 +104,28 @@ class Map {
                     }
                 })
                 .attr('data-country', (d) => d.country)
+                .attr('data-x', (d) => {
+                    if (d.country === 'Bonaire, Sint Eustatius and Saba' || d.country === 'Gibraltar' || d.country === 'Kosovo') {
+                        return PROJECTION(MISSING_COUNTRIES[d.country])[0]
+                    } else {
+                        const COUNTRY_PATH = COUNTRY_PATHS.filter((i) => {
+                            return i.name === d.country
+                        })
+                        
+                        return PATH.centroid(COUNTRY_PATH.data()[0])[0]
+                    }
+                })
+                .attr('data-y', (d) => {
+                    if (d.country === 'Bonaire, Sint Eustatius and Saba' || d.country === 'Gibraltar' || d.country === 'Kosovo') {
+                        return PROJECTION(MISSING_COUNTRIES[d.country])[1]
+                    } else {
+                        const COUNTRY_PATH = COUNTRY_PATHS.filter((i) => {
+                            return i.name === d.country
+                        })
+                        
+                        return PATH.centroid(COUNTRY_PATH.data()[0])[1]
+                    }
+                })
                 .attr('class', 'map__group')
                 .on('mouseover', this.showOverlay.bind(this))
                 .on('mouseout', this.hideOverlay.bind(this))
@@ -127,8 +149,8 @@ class Map {
         if (window.matchMedia("(max-width: 640px)").matches) {
             return
         }
-        const X = parseInt($(`[data-country="${d.country}"]`).css('transform').split(',')[4])
-        const Y = parseInt($(`[data-country="${d.country}"]`).css('transform').split(',')[5])
+        const X = parseInt($(`[data-country="${d.country}"]`).data('x'))
+        const Y = parseInt($(`[data-country="${d.country}"]`).data('y'))
         
         const MODE_STRING = d[`sending_${this.year}`] > 0 && d[`receiving_${this.year}`] > 0 ? 'Sending / receiving country' : d[`sending_${this.year}`] > 0 ? 'Sending country' : 'Receiving country'
 
