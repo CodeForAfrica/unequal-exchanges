@@ -8,12 +8,11 @@ module.exports = {
         var ids = new Array();
         fs.readFile(join(config.scripts.src, 'data/chord-transactions.json'), 'utf8', function(err, data) {
             data = JSON.parse(data);
-            var total = 0;
+            
             for(var i = 0; i < data.length; i++) {
                 var countryHasBeen = false;
                 for(var j = 0; j < countries.length; j++) {
                     if (countries[j].name === data[i]['sending_country']) {
-                        console.log('match')
                         countryHasBeen = true
                         countries[j].total += parseInt(data[i]['sending_total'], 10)
                         countries[j].receiving_countries.push({
@@ -26,7 +25,7 @@ module.exports = {
                 }
                 if (!countryHasBeen) {
                     countries.push({
-                        'id': total,
+                        'id': null,
                         'name': data[i]['sending_country'],
                         'total': parseInt(data[i]['sending_total'], 10),
                         'receiving_countries': [
@@ -37,9 +36,16 @@ module.exports = {
                             }
                         ]
                     });
-                    total += 1;
-                    ids.push(data[i]['sending_country']);
                 }
+            }
+
+            countries.sort(function(a, b) {
+                return parseFloat(b.total) - parseFloat(a.total);
+            });
+
+            for (var m = 0; m < countries.length; m++) {
+                countries[m].id = m
+                ids[m] = countries[m].name
             }
 
             for(var k = 0; k < countries.length; k++) {
