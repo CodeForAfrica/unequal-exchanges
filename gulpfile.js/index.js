@@ -7,6 +7,7 @@ var scripts    = require('./tasks/scripts');
 var styles     = require('./tasks/styles');
 var watch      = require('./tasks/watch');
 var webserver  = require('./tasks/webserver');
+var data       = require('./tasks/data');
 
 // Define tasks and dependencies
 gulp.task('clean:css', clean.css);
@@ -26,3 +27,5 @@ gulp.task('build', ['clean:css', 'clean:js'], function() {
 gulp.task('webserver', webserver);
 
 gulp.task('default', ['build', 'watch', 'webserver']);
+
+gulp.task('data', data.sort);

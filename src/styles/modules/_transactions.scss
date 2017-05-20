@@ -1,0 +1,77 @@
+.transactions {
+    overflow: hidden;
+
+    &__instruction {
+        margin: 20px;
+    }
+
+    &__country {
+        float: left;
+        height: 0;
+        padding-bottom: 6.666%;
+        position: relative;
+        width: 6.666%;
+
+        &:hover,
+        &:active,
+        &:focus {
+            color: $light-grey;
+            cursor: pointer;
+        }
+
+        &:nth-child(15n + 1) {
+            clear: both;
+        }
+
+        @media (max-width: 62.5em) {
+            padding-bottom: 10%;
+            width: 10%;
+
+            &:nth-child(15n + 1) {
+                clear: none;
+            }
+
+            &:nth-child(10n + 1) {
+                clear: both;
+            }
+        }
+
+        @media (max-width: 46em) {
+            padding-bottom: 20%;
+            width: 20%;
+
+            &:nth-child(5n + 1) {
+                clear: both;
+            }
+        }
+    }
+
+    &__name {
+        display: block;
+        font-size: 12px;
+        margin: 5px;
+        position: relative;
+        text-align: center;
+        z-index: 1;
+    }
+
+    &__sending {
+        background: $grey;
+    }
+
+    &__receiving {
+        background: $gold;
+    }
+
+    &__sending, &__receiving {
+        border-radius: 50%;
+        display: block;
+        height: 0;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 350ms;
+        width: 0;
+    }
+}
