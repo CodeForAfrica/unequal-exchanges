@@ -30,7 +30,6 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "gulp-webserver": "^0.9.1",
-    "jsonfile": "^3.0.0",
     "topojson-client": "^3.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
