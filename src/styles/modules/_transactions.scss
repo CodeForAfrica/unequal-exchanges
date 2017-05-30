@@ -23,14 +23,6 @@
         transition: opacity 350ms;
         width: 6.666%;
 
-        &.hide {
-            // opacity: 0;
-        }
-
-        &.receiving {
-            opacity: 1;
-        }
-
         &:hover,
         &:active,
         &:focus {
@@ -84,6 +76,10 @@
 
         .hide & {
             opacity: 0;
+        }
+
+        &.receiving {
+            opacity: 1;
         }
 
         .active & {

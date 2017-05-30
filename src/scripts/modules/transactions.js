@@ -62,7 +62,7 @@ class Transactions {
                     'width': receivingWidth,
                     'height': receivingWidth
                 })
-            } else {
+            } else if (!$country.hasClass('hide')) {
                 const sendingWidth = COUNTRY_WIDTH * Math.sqrt($country.data('total') / MAX_TOTAL)
                 $country.find('.transactions__sending').css({
                     'width': sendingWidth, 
@@ -220,7 +220,7 @@ class Transactions {
             
             $.each(receivingIds, (index, countryId) => {
                 const $receivingCountry = $(`#country-${countryId}`)
-                $receivingCountry.addClass('receiving')
+                $receivingCountry.addClass('receiving').removeClass('hide')
                 const receivingWidth = COUNTRY_WIDTH * Math.sqrt(receivingValues[index] / MAX_TOTAL)
                 $receivingCountry.find('.transactions__sending').css({
                     'width': receivingWidth,
