@@ -1,21 +1,39 @@
 .transactions {
     overflow: hidden;
 
+    &__container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    &__countries {
+        overflow: hidden;
+    }
+
     &__instruction {
+        font-weight: bold;
         margin: 20px;
     }
 
     &__country {
         float: left;
-        height: 0;
+        height: 22px;
         padding-bottom: 6.666%;
         position: relative;
+        transition: opacity 350ms;
         width: 6.666%;
+
+        &.hide {
+            opacity: 0;
+        }
+
+        &.receiving {
+            opacity: 1;
+        }
 
         &:hover,
         &:active,
         &:focus {
-            color: $light-grey;
             cursor: pointer;
         }
 
@@ -49,29 +67,77 @@
     &__name {
         display: block;
         font-size: 12px;
+        font-weight: bold;
         margin: 5px;
         position: relative;
         text-align: center;
         z-index: 1;
+
+        .active & {
+            display: none;
+        }
     }
 
     &__sending {
-        background: $grey;
-    }
-
-    &__receiving {
-        background: $gold;
-    }
-
-    &__sending, &__receiving {
+        background: $blue;
         border-radius: 50%;
         display: block;
         height: 0;
         left: 50%;
+        margin-top: 11px;
         position: absolute;
         top: 50%;
         transform: translate(-50%, -50%);
-        transition: all 350ms;
+        transition: all 500ms;
         width: 0;
+
+        .transactions__country:hover & {
+            background: $blue-alt;
+        }
+
+        .receiving & {
+            background: $gold;
+        }
+    }
+
+    &__active {
+        background: $background;
+        display: none;
+        left: 0;
+        line-height: 1;
+        padding: 5px 20px;
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: 5;
+
+        &.active {
+            display: block;
+        }
+    }
+
+    &__active__name {
+        display: block;
+        font-size: 30px;
+        font-weight: bold;
+    }
+
+    &__active__total {
+        color: $blue;
+        display: block;
+        font-size: 20px;
+    }
+
+    &__svg, &__canvas-container {
+        bottom: 0;
+        height: 100%;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: -1;
     }
 }

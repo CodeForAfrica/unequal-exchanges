@@ -13,8 +13,17 @@
 
     <body>
         <div class="transactions">
-            <div class="transactions__instruction">Hover over a country to see which countries they send AEOI to in any given year.</div>
-            <div class="transactions__container"></div>
+            <div class="transactions__instruction">Click on a country to see the connections</div>
+            <div class="transactions__active">
+                <span class="transactions__active__name"></span>
+                <span class="transactions__active__total"></span>
+                <span class="transactions__active__close"></span>
+            </div>
+            <div class="transactions__container">
+                <svg class="transactions__svg"></svg>
+                <!-- <div class="transactions__canvas-container"></div> -->
+                <div class="transactions__countries"></div>
+            </div>
         </div>
         <script src="dist/javascript/index.js"></script>
     </body>

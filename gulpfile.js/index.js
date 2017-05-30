@@ -26,6 +26,6 @@ gulp.task('build', ['clean:css', 'clean:js'], function() {
 
 gulp.task('webserver', webserver);
 
-gulp.task('default', ['build', 'watch', 'webserver']);
+gulp.task('default', ['watch', 'webserver']);
 
 gulp.task('data', data.sort);

@@ -34,14 +34,15 @@ module.exports = {
                                 'name': data[i]['receiving_country'],
                                 'value': parseInt(data[i]['sending_total'], 10)
                             }
-                        ]
+                        ],
+                        'sending_countries': []
                     });
                 }
             }
 
-            countries.sort(function(a, b) {
-                return parseFloat(b.total) - parseFloat(a.total);
-            });
+            // countries.sort(function(a, b) {
+            //     return parseFloat(b.total) - parseFloat(a.total);
+            // });
 
             for (var m = 0; m < countries.length; m++) {
                 countries[m].id = m
@@ -52,6 +53,15 @@ module.exports = {
                 for(var l = 0; l < countries[k].receiving_countries.length; l++) {
                     countries[k].receiving_countries[l].id = ids.indexOf(countries[k].receiving_countries[l].name);
                 }
+            }
+
+            for(var i = 0; i < data.length; i++) {
+                let index = countries.map(function(e) { return e.name; }).indexOf(data[i]['receiving_country']);
+                countries[index].sending_countries.push({
+                    'id': ids.indexOf(data[i]['sending_country']),
+                    'name': data[i]['sending_country'],
+                    'value': parseInt(data[i]['sending_total'], 10)
+                })
             }
 
             fs.writeFile(join(config.scripts.src, 'data/transactions.json'), JSON.stringify(countries), function(err) {

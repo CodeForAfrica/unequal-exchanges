@@ -102,12 +102,12 @@
         }
 
         @include when('sending') {
-            border-color: $grey;
+            border-color: $blue;
 
             &:hover,
             &:active,
             &:focus {
-                background: $grey;
+                background: $blue;
                 color: $white;
 
                 &:before {
@@ -116,11 +116,11 @@
             }
 
             &:before {
-                background: $grey;
+                background: $blue;
             }
 
             &.active {
-                background: $grey;
+                background: $blue;
 
                 &:before {
                     background: $white;
