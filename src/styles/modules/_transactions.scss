@@ -24,7 +24,7 @@
         width: 6.666%;
 
         &.hide {
-            opacity: 0;
+            // opacity: 0;
         }
 
         &.receiving {
@@ -35,6 +35,14 @@
         &:active,
         &:focus {
             cursor: pointer;
+        }
+
+        &.active {
+            &:hover,
+            &:active,
+            &:focus {
+                cursor: default;
+            }
         }
 
         &:nth-child(15n + 1) {
@@ -71,7 +79,12 @@
         margin: 5px;
         position: relative;
         text-align: center;
+        transition: opacity 350ms;
         z-index: 1;
+
+        .hide & {
+            opacity: 0;
+        }
 
         .active & {
             display: none;
@@ -95,7 +108,11 @@
             background: $blue-alt;
         }
 
-        .receiving & {
+        .transactions__country.active:hover & {
+            background: $blue;
+        }
+
+        .receiving &, .hide & {
             background: $gold;
         }
     }
