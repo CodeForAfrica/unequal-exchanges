@@ -1,5 +1,14 @@
 .transactions {
     overflow: hidden;
+    padding: 0 rem(70);
+
+    @media (max-width: 62.5em) {
+        padding: 0 rem(20);
+    }
+
+    .exchanges__key {
+        margin-top: rem(30);
+    }
 
     &__container {
         overflow: hidden;
@@ -11,13 +20,20 @@
     }
 
     &__instruction {
+        font-size: rem(22);
         font-weight: bold;
-        margin: 20px;
+        line-height: rem(26);
+        margin: rem(20) 0;
+        transition: opacity 350ms;
+
+        &.hide {
+            opacity: 0;
+        }
     }
 
     &__country {
         float: left;
-        height: 22px;
+        height: rem(22);
         padding-bottom: 6.666%;
         position: relative;
         transition: opacity 350ms;
@@ -66,19 +82,22 @@
 
     &__name {
         display: block;
-        font-size: 12px;
+        font-size: rem(12);
         font-weight: bold;
-        margin: 5px;
+        margin: rem(5) rem(5) 0;
+        overflow: hidden;
         position: relative;
         text-align: center;
+        text-overflow: ellipsis;
         transition: opacity 350ms;
+        white-space: nowrap;
         z-index: 1;
 
         .hide & {
             opacity: 0;
         }
 
-        &.receiving {
+        .linked & {
             opacity: 1;
         }
 
@@ -87,18 +106,22 @@
         }
     }
 
+    &__count {
+        display: block;
+        font-size: rem(10);
+        font-weight: 300;
+        opacity: 0;
+        position: relative;
+        text-align: center;
+        transition: opacity 350ms;
+
+        .linked & {
+            opacity: 1;
+        }
+    }
+
     &__sending {
         background: $blue;
-        border-radius: 50%;
-        display: block;
-        height: 0;
-        left: 50%;
-        margin-top: 11px;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        transition: all 500ms;
-        width: 0;
 
         .transactions__country:hover & {
             background: $blue-alt;
@@ -108,17 +131,47 @@
             background: $blue;
         }
 
-        .receiving &, .hide & {
+        .linked &, .hide & {
             background: $gold;
         }
     }
 
+    &__receiving {
+        background: $gold;
+
+        .transactions__country:hover & {
+            background: $gold-alt;
+        }
+
+        .transactions__country.active:hover & {
+            background: $gold;
+        }
+
+        .linked &, .hide & {
+            background: $blue;
+        }
+    }
+
+    &__sending, &__receiving {
+        border-radius: 50%;
+        display: block;
+        height: 0;
+        left: 50%;
+        margin-top: rem(11);
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 500ms;
+        width: 0;
+    }
+
     &__active {
         background: $background;
+        box-sizing: border-box;
         display: none;
         left: 0;
         line-height: 1;
-        padding: 5px 20px;
+        padding: rem(46) rem(70) rem(20);
         position: fixed;
         right: 0;
         top: 0;
@@ -128,18 +181,53 @@
         &.active {
             display: block;
         }
+
+        @media (max-width: 62.5em) {
+            padding: rem(46) rem(20) rem(20);
+        }
     }
 
     &__active__name {
         display: block;
-        font-size: 30px;
+        float: left;
+        font-size: rem(27);
         font-weight: bold;
+        line-height: rem(32);
+
+        @media (max-width: 46em) {
+            float: none;
+            padding-right: rem(55);
+        }
     }
 
     &__active__total {
+        clear: both;
         color: $blue;
         display: block;
-        font-size: 20px;
+        font-size: rem(23);
+        line-height: rem(28);
+    }
+
+    &__active__close {
+        background: url('../../img/icon-close.svg') center/100% no-repeat;
+        display: block;
+        float: left;
+        height: rem(15);
+        margin-left: rem(60);
+        margin-top: rem(5);
+        width: rem(15);
+
+        &:hover,
+        &:active,
+        &:focus {
+            cursor: pointer;
+        }
+
+        @media (max-width: 46em) {
+            position: absolute;
+            right: rem(20);
+            top: rem(20);
+        }
     }
 
     &__svg, &__canvas-container {

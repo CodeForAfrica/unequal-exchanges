@@ -4,6 +4,7 @@ import * as topojson                    from 'topojson'
 import world                            from '../data/countries.json'
 import moneyData                        from '../data/map.json'
 import countryNames                     from '../data/country-names.json'
+import PubSub                           from 'pubsub-js'
 import throttle                         from '../utils/throttle.js'
 import {COLOR_SENDING, COLOR_RECEIVING} from './globals'
 
@@ -45,7 +46,7 @@ class Map {
 
         this.$start.on('click', this.timeline.bind(this))
 
-        $('.map__key-item').on('click', this.switchMode.bind(this))
+        PubSub.subscribe('keyChanged', this.switchMode.bind(this))
 
         $('.map__year-marker').on('click', (e) => {
             this.moveToYear($(e.currentTarget).data('year'))
@@ -73,13 +74,7 @@ class Map {
         }
     }
 
-    switchMode(e) {
-        const $TARGET = $(e.currentTarget)
-        if ($TARGET.hasClass('active')) {
-            return
-        }
-
-        $TARGET.addClass('active').siblings().removeClass('active')
+    switchMode() {
         this.mode = this.mode === 'receiving' ? 'sending' : 'receiving'
 
         d3.selectAll('.map__marker')

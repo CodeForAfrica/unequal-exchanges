@@ -28,6 +28,7 @@ module.exports = {
                         'id': null,
                         'name': data[i]['sending_country'],
                         'total': parseInt(data[i]['sending_total'], 10),
+                        'receiving_total': 0,
                         'receiving_countries': [
                             {
                                 'id': null,
@@ -62,6 +63,7 @@ module.exports = {
                     'name': data[i]['sending_country'],
                     'value': parseInt(data[i]['sending_total'], 10)
                 })
+                countries[index].receiving_total += parseInt(data[i]['sending_total'], 10)
             }
 
             fs.writeFile(join(config.scripts.src, 'data/transactions.json'), JSON.stringify(countries), function(err) {
