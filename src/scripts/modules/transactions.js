@@ -259,17 +259,6 @@ class Transactions {
                 .transition()
                     .duration(350)
                     .attr('stroke', COLOR_LINES_DARK)
-                    // .attr('opacity', (d) => {
-                    //     if (MODE_SENDING) {
-                    //         return 1
-                    //     } else {
-                    //         if (d.bilateral) {
-                    //             return 1
-                    //         } else {
-                    //             return 0
-                    //         }
-                    //     }
-                    // })
         })
 
         this.$countries.on('click.select', (e) => {
