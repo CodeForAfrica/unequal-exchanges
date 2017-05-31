@@ -2,6 +2,10 @@
     @include has('key') {
         text-align: center;
 
+        .transactions &, .treemap & {
+            margin-top: rem(30);
+        }
+
         @include bp(em(850)) {
             margin-bottom: rem(20);
         }

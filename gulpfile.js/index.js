@@ -17,6 +17,9 @@ gulp.task('scripts:lint', scripts.lint);
 gulp.task('scripts:bundle', ['scripts:lint'], scripts.bundle);
 gulp.task('styles', styles);
 
+gulp.task('data:sort', data.sort)
+gulp.task('data:trees', data.trees)
+
 gulp.task('watch', watch);
 
 // Build
@@ -28,4 +31,4 @@ gulp.task('webserver', webserver);
 
 gulp.task('default', ['watch', 'webserver']);
 
-gulp.task('data', data.sort);
+gulp.task('data', ['data:sort', 'data:trees']);

@@ -8,7 +8,6 @@ let MAX_TOTAL = 0
 let COUNTRY_WIDTH = 0
 let COUNTRY_HEIGHT = 0
 let LINES_ARRAY = []
-let MODE_SENDING = true
 const COLOR_LINES = '#D8D8D8'
 const COLOR_LINES_DARK = '#A5A5A5'
 
@@ -28,6 +27,7 @@ class Transactions {
         this.$instructions = $('.transactions__instruction')
         this.$circles = $('.transactions__sending')
         this.lines = null
+        this.modeSending = true
     }
 
     init() {
@@ -45,7 +45,7 @@ class Transactions {
     }
 
     switchMode() {
-        if (MODE_SENDING) {
+        if (this.modeSending) {
             this.$circles.removeClass('transactions__sending').addClass('transactions__receiving')  
             this.$circles.each((index, element) => {
                 const $circle = $(element)
@@ -80,7 +80,7 @@ class Transactions {
             this.lines.attr('opacity', 1)
         }
         
-        MODE_SENDING = !MODE_SENDING
+        this.modeSending = !this.modeSending
     }
 
     resize() {
@@ -171,6 +171,8 @@ class Transactions {
             $countryDiv.attr('data-receiving-total', country.receiving_total)
             $countryDiv.attr('data-id', country.id)
             $countryDiv.attr('data-name', country.name)
+            $countryDiv.attr('data-sending-country-count', country.sending_countries.length)
+            $countryDiv.attr('data-receiving-country-count', country.receiving_countries.length)
             $countryDiv.attr('data-receiving', () => {
                 let receivingArray = []
                 $.each(country.receiving_countries, (index, receivingCountry) => {
@@ -245,33 +247,36 @@ class Transactions {
     mouseEvents() {
         this.$countries.on('mouseover', (e) => {
             const $country = $(e.currentTarget)
+            const id = $country.data('id')
 
-            this.lines
-                .filter(function(d) {
-                    let id = $country.data('id')
-                    if (MODE_SENDING) {
-                        return d.sending === id || (d.receiving === id && d.bilateral)
-                    } else {
-                        return d.receiving === id || (d.sending === id && d.bilateral)
-                    }
-                })
-                .raise()
-                .transition()
-                    .duration(350)
-                    .attr('stroke', COLOR_LINES_DARK)
+            this.lines.filter((d) => {
+                if (this.modeSending) {
+                    return d.sending === id || (d.receiving === id && d.bilateral)
+                } else {
+                    return d.receiving === id || (d.sending === id && d.bilateral)
+                }
+            })
+            .raise()
+            .transition()
+                .duration(350)
+                .attr('stroke', COLOR_LINES_DARK)
         })
 
         this.$countries.on('click.select', (e) => {
             this.$countries.off('mouseover')
             this.$countries.off('mouseout')
-            this.$countries.off('click.select')
+            this.deselect(false)
+            
             const $country = $(e.currentTarget).addClass('active')
             const id = $country.data('id')
+            const modeString = this.modeSending ? 'receiving' : 'sending'
             this.$activeName.text($country.data('name'))
-            if (MODE_SENDING) {
-                this.$activeTotal.text(`${$country.data('total')} transactions`)
+            const count = $country.data(`${modeString}CountryCount`)
+            const countString =  count > 1 ? `${count} countries` : `${count} country`
+            if (this.modeSending) {
+                this.$activeTotal.text(`reports to send ${$country.data('total')} transactions to ${countString}`)
             } else {
-                this.$activeTotal.text(`${$country.data('receivingTotal')} transactions`)
+                this.$activeTotal.text(`reports to receive ${$country.data('receivingTotal')} transactions from ${countString}`)
             }
             this.$active.addClass('active')
             this.$instructions.addClass('hide')
@@ -281,14 +286,14 @@ class Transactions {
                     'height': 0
                 })
             const $activeCountry = $(`#country-${id}`)
-            const modeString = MODE_SENDING ? 'receiving' : 'sending'
+            
             const linkedIds = $activeCountry.data(modeString).toString().split(',')
             const linkedValues = $activeCountry.data(`${modeString}Values`).toString().split(',')
             
             $.each(linkedIds, (index, countryId) => {
                 const $linkedCountry = $(`#country-${countryId}`)
                 $linkedCountry.addClass('linked').removeClass('hide')
-                $linkedCountry.find('.transactions__count').text(`${linkedValues[index]} transactions`)
+                $linkedCountry.find('.transactions__count').text(`${linkedValues[index]}`)
                 const linkedWidth = COUNTRY_WIDTH * Math.sqrt(linkedValues[index] / MAX_TOTAL)
                 $linkedCountry.find('.transactions__sending, .transactions__receiving').css({
                     'width': linkedWidth,
@@ -297,8 +302,8 @@ class Transactions {
             })
 
             this.lines
-                .filter(function(d) {
-                    if (MODE_SENDING) {
+                .filter((d) => {
+                    if (this.modeSending) {
                         return d.sending !== id && (d.receiving !== id || !d.bilateral)
                     } else {
                         return d.receiving !== id && (d.sending !== id || !d.bilateral)
@@ -310,8 +315,8 @@ class Transactions {
 
             
             this.lines
-                .filter(function(d) {
-                    if (MODE_SENDING) {
+                .filter((d) => {
+                    if (this.modeSending) {
                         return d.sending === id || (d.receiving === id && d.bilateral)
                     } else {
                         return d.receiving === id || (d.sending === id && d.bilateral)
@@ -323,43 +328,7 @@ class Transactions {
                     .attr('stroke', COLOR_LINES)
 
             this.$active.on('click.deselect', () => {
-                this.$active.off('click.deselect')
-                this.$active.removeClass('active')
-                this.$countries.removeClass('hide linked active')
-                this.$instructions.removeClass('hide')
-                this.lines
-                    .transition()
-                        .duration(350)
-                        .attr('opacity', (d) => {
-                            if (MODE_SENDING) {
-                                return 1
-                            } else {
-                                if (d.bilateral) {
-                                    return 1
-                                } else {
-                                    return 0
-                                }
-                            }
-                        })
-                        .attr('stroke', COLOR_LINES)
-                        .on('end', (d, i) => {
-                            if (i === this.$countries.length - 1) {
-                                this.mouseEvents()
-                            }
-                        })
-                // $.each(receivingIds, (index, countryId) => {
-                this.$circles.each((index, element) => {
-                    const $circle = $(element)
-                    const $country = $circle.parents('.transactions__country')
-                    let circleWidth = COUNTRY_WIDTH * Math.sqrt($country.data('receivingTotal') / MAX_TOTAL)
-                    if (MODE_SENDING) {
-                        circleWidth = COUNTRY_WIDTH * Math.sqrt($country.data('total') / MAX_TOTAL)
-                    }
-                    $circle.css({
-                        'width': circleWidth, 
-                        'height': circleWidth
-                    })
-                })
+                this.deselect(true)
             })
         })
 
@@ -368,7 +337,7 @@ class Transactions {
                 .transition()
                     .duration(350)
                     .attr('opacity', (d) => {
-                        if (MODE_SENDING) {
+                        if (this.modeSending) {
                             return 1
                         } else {
                             if (d.bilateral) {
@@ -379,6 +348,49 @@ class Transactions {
                         }
                     })
                     .attr('stroke', COLOR_LINES)
+        })
+    }
+
+    deselect(reset) {
+        if (reset) {
+            this.$countries.off('click.select')
+        }
+        this.$active.off('click.deselect')
+        this.$active.removeClass('active')
+        this.$countries.removeClass('hide linked active')
+        this.$instructions.removeClass('hide')
+        this.lines
+            .transition()
+                .duration(350)
+                .attr('opacity', (d) => {
+                    if (this.modeSending) {
+                        return 1
+                    } else {
+                        if (d.bilateral) {
+                            return 1
+                        } else {
+                            return 0
+                        }
+                    }
+                })
+                .attr('stroke', COLOR_LINES)
+                .on('end', (d, i) => {
+                    if (i === this.$countries.length - 1 && reset) {
+                        this.mouseEvents()
+                    }
+                })
+        // $.each(receivingIds, (index, countryId) => {
+        this.$circles.each((index, element) => {
+            const $circle = $(element)
+            const $country = $circle.parents('.transactions__country')
+            let circleWidth = COUNTRY_WIDTH * Math.sqrt($country.data('receivingTotal') / MAX_TOTAL)
+            if (this.modeSending) {
+                circleWidth = COUNTRY_WIDTH * Math.sqrt($country.data('total') / MAX_TOTAL)
+            }
+            $circle.css({
+                'width': circleWidth, 
+                'height': circleWidth
+            })
         })
     }
 }

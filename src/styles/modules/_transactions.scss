@@ -6,10 +6,6 @@
         padding: 0 rem(20);
     }
 
-    .exchanges__key {
-        margin-top: rem(30);
-    }
-
     &__container {
         overflow: hidden;
         position: relative;
@@ -134,6 +130,12 @@
         .linked &, .hide & {
             background: $gold;
         }
+
+        .transactions__country.linked:hover & {
+            background: $gold-alt;
+        }
+
+
     }
 
     &__receiving {
@@ -149,6 +151,10 @@
 
         .linked &, .hide & {
             background: $blue;
+        }
+
+        .transactions__country.linked:hover & {
+            background: $blue-alt;
         }
     }
 
@@ -171,6 +177,7 @@
         display: none;
         left: 0;
         line-height: 1;
+        overflow: hidden;
         padding: rem(46) rem(70) rem(20);
         position: fixed;
         right: 0;
@@ -183,7 +190,16 @@
         }
 
         @media (max-width: 62.5em) {
-            padding: rem(46) rem(20) rem(20);
+            padding: rem(20);
+        }
+    }
+
+    &__active__wrapper {
+        float: left;
+
+        @media (max-width: 62.5em) {
+            float: none;
+            margin-bottom: rem(10);
         }
     }
 
@@ -209,17 +225,21 @@
     }
 
     &__active__close {
-        background: url('../../img/icon-close.svg') center/100% no-repeat;
+        background: url('../../img/icon-close.svg') center/60% no-repeat;
+        border: 1px solid transparent;
+        border-radius: 50%;
         display: block;
         float: left;
-        height: rem(15);
+        height: rem(25);
         margin-left: rem(60);
-        margin-top: rem(5);
-        width: rem(15);
+        margin-top: rem(1);
+        transition: border-color 350ms;
+        width: rem(25);
 
         &:hover,
         &:active,
         &:focus {
+            border-color: black;
             cursor: pointer;
         }
 
@@ -227,6 +247,53 @@
             position: absolute;
             right: rem(20);
             top: rem(20);
+        }
+    }
+
+    &__legend {
+        float: right;
+        line-height: rem(32);
+
+        @media (max-width: 62.5em) {
+            float: none;
+        }
+    }
+
+    &__legend--sending, &__legend--receiving {
+        display: inline-block;
+        font-size: rem(18);
+        height: rem(18);
+        line-height: rem(18);
+
+        &:before {
+            border-radius: 50%;
+            content: "";
+            display: block;
+            float: left;
+            height: rem(18);
+            margin-right: rem(18);
+            width: rem(18);
+        }
+
+        @media (max-width: 62.5em) {
+            margin-bottom: rem(5);
+        }
+    }
+
+    &__legend--sending {
+        color: $blue;
+
+        &:before {
+            background: $blue;
+        }
+    }
+
+    &__legend--receiving {
+        color: $gold;
+        margin-right: rem(25);
+
+        &:before {
+            background: $gold;
         }
     }
 

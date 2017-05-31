@@ -1,0 +1,24 @@
+.treemap {
+    overflow: hidden;
+    padding: 0 rem(280) 0 rem(135);
+
+    @media (max-width: 62.5em) {
+        // padding: 0 rem(20);
+    }
+
+    &__container {
+        height: 0;
+        overflow: hidden;
+        padding-bottom: 58%;
+        position: relative;
+    }
+
+    &__node {
+        border: solid 1px white;
+        font: 10px sans-serif;
+        line-height: 12px;
+        overflow: hidden;
+        position: absolute;
+        text-indent: 2px;
+    }
+}

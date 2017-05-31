@@ -70,5 +70,63 @@ module.exports = {
                 console.log(err);
             });
         });
+    },
+
+    trees: function() {
+        var sending = [
+            {'name': 'HIC', 'children': []},
+            {'name': 'UMIC', 'children': []},
+            {'name': 'LMIC', 'children': []}
+        ]
+        var receiving = [
+            {'name': 'HIC', 'children': []},
+            {'name': 'UMIC', 'children': []},
+            {'name': 'LMIC', 'children': []}
+        ]
+        fs.readFile(join(config.scripts.src, 'data/chord-transactions.json'), 'utf8', function(err, data) {
+            data = JSON.parse(data);
+            for(var i = 0; i < data.length; i++) {
+                var sendingIndex = sending.map(function(e) { return e.name; }).indexOf(data[i]['sending_income']);
+                var sendingExists = sending[sendingIndex].children.map(function(e) { return e.name; }).indexOf(data[i]['sending_country'])
+                if (sendingExists >= 0) {
+                    sending[sendingIndex]['children'][sendingExists]['size'] += parseInt(data[i]['sending_total'], 10)
+                } else {
+                    sending[sendingIndex]['children'].push({
+                        'name': data[i]['sending_country'],
+                        'size': data[i]['sending_total']
+                    })
+                }
+
+                var receivingIndex = receiving.map(function(e) { return e.name; }).indexOf(data[i]['receiving_income']);
+                var receivingExists = receiving[receivingIndex].children.map(function(e) { return e.name; }).indexOf(data[i]['receiving_country'])
+                if (receivingExists >= 0) {
+                    receiving[receivingIndex]['children'][receivingExists]['size'] += parseInt(data[i]['sending_total'], 10)
+                } else {
+                    receiving[receivingIndex]['children'].push({
+                        'name': data[i]['receiving_country'],
+                        'size': data[i]['sending_total']
+                    })
+                }
+            }
+
+            for(var j = 0; j < sending.length; j ++) {
+                sending[j]['children'].sort(function(a, b) {
+                    return parseFloat(b.size) - parseFloat(a.size);
+                });
+
+                receiving[j]['children'].sort(function(a, b) {
+                    return parseFloat(b.size) - parseFloat(a.size);
+                });
+            }
+
+            var trees = [
+                {'name': 'Sending', 'children': sending}, 
+                {'name': 'Receiving', 'children': receiving}
+            ]
+
+            fs.writeFile(join(config.scripts.src, 'data/tree.json'), JSON.stringify(trees), function(err) {
+                console.log(err);
+            });
+        })
     }
 };
