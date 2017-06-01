@@ -19,6 +19,7 @@ gulp.task('styles', styles);
 
 gulp.task('data:sort', data.sort)
 gulp.task('data:trees', data.trees)
+gulp.task('data:treemaps', data.treemaps)
 
 gulp.task('watch', watch);
 
@@ -31,4 +32,4 @@ gulp.task('webserver', webserver);
 
 gulp.task('default', ['watch', 'webserver']);
 
-gulp.task('data', ['data:sort', 'data:trees']);
+gulp.task('data', ['data:sort', 'data:trees', 'data:treemaps']);

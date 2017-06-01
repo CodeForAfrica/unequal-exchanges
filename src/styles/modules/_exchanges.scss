@@ -6,6 +6,10 @@
             margin-top: rem(30);
         }
 
+        .treemap & {
+            margin-bottom: rem(60);
+        }
+
         @include bp(em(850)) {
             margin-bottom: rem(20);
         }
