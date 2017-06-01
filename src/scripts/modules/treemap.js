@@ -58,13 +58,6 @@ class Treemap {
         this.$labels.addClass('treemap__label--active')
         this.resize()
         this.$container.addClass(`treemap__container--${this.activeIncome} treemap__container--active`)
-        // if (this.activeIncome === 'HIC') {
-        //     this.data = DATA.children[0]
-        // } else if (this.activeIncome === 'UMIC') {
-        //     this.data = DATA.children[1]
-        // } else {
-        //     this.data = DATA.children[2]
-        // }
         this.update()
     }
 
