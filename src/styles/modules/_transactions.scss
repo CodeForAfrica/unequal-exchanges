@@ -41,7 +41,7 @@
             cursor: pointer;
         }
 
-        &.active {
+        &.active, &.hide, &.linked {
             &:hover,
             &:active,
             &:focus {
@@ -132,7 +132,7 @@
         }
 
         .transactions__country.linked:hover & {
-            background: $gold-alt;
+            background: $gold;
         }
 
 
@@ -154,7 +154,7 @@
         }
 
         .transactions__country.linked:hover & {
-            background: $blue-alt;
+            background: $blue;
         }
     }
 

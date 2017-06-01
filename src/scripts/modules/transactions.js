@@ -265,7 +265,7 @@ class Transactions {
         this.$countries.on('click.select', (e) => {
             this.$countries.off('mouseover')
             this.$countries.off('mouseout')
-            this.deselect(false)
+            this.$countries.off('click.select')
             
             const $country = $(e.currentTarget).addClass('active')
             const id = $country.data('id')
@@ -328,7 +328,11 @@ class Transactions {
                     .attr('stroke', COLOR_LINES)
 
             this.$active.on('click.deselect', () => {
-                this.deselect(true)
+                this.deselect()
+            })
+
+            $('.transactions__country.hide').on('click.deselect', () => {
+                this.deselect()
             })
         })
 
@@ -351,11 +355,10 @@ class Transactions {
         })
     }
 
-    deselect(reset) {
-        if (reset) {
-            this.$countries.off('click.select')
-        }
+    deselect() {
+        this.$countries.off('click.select')
         this.$active.off('click.deselect')
+        $('.transactions__country.hide').off('click.deselect')
         this.$active.removeClass('active')
         this.$countries.removeClass('hide linked active')
         this.$instructions.removeClass('hide')
@@ -375,7 +378,7 @@ class Transactions {
                 })
                 .attr('stroke', COLOR_LINES)
                 .on('end', (d, i) => {
-                    if (i === this.$countries.length - 1 && reset) {
+                    if (i === this.$countries.length - 1) {
                         this.mouseEvents()
                     }
                 })
