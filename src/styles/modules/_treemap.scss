@@ -1,13 +1,11 @@
 .treemap {
+    min-width: rem(320);
     overflow: hidden;
-    padding: 0 rem(275) rem(80) rem(130);
 
-    &.active {
-        padding: rem(5) rem(135) rem(85);
-    }
+    .treemap__wrapper {
+        padding: 0 rem(275) rem(80) rem(130);
 
-    @media (max-width: 62.5em) {
-        &, &.active {
+        @media (max-width: 62.5em) {
             padding: 0 rem(20) rem(100);
         }
     }
@@ -23,7 +21,7 @@
     }
 
     &__node {
-        border: solid 1px white;
+        // border: solid 1px white;
         font: 10px sans-serif;
         line-height: 12px;
         overflow: visible;
@@ -56,6 +54,27 @@
         }
     }
 
+    &__country-name {
+        color: $white;
+        display: none;
+        font-size: rem(12);
+        line-height: rem(14);
+        left: 50%;
+        overflow: hidden;
+        position: absolute;
+        text-align: center;
+        text-overflow: ellipsis;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+
+        .treemap__container--HIC .treemap__node--HIC &,
+        .treemap__container--UMIC .treemap__node--UMIC &,
+        .treemap__container--LMIC .treemap__node--LMIC & {
+            display: block;
+        }
+    }
+
     &__label {
         color: $text;
         display: block;
@@ -71,11 +90,16 @@
             cursor: pointer;
         }
 
+        @media (max-width: 62.5em) {
+            font-size: rem(18);
+            line-height: rem(22);
+            width: rem(150);
+        }
+
         .treemap__container--active & {
             background: url('../../img/arrow-left.svg') left center no-repeat;
             bottom: 100%;
             left: rem(10);
-            margin-bottom: rem(5);
             padding-left: rem(40);
             right: auto;
             text-align: left;

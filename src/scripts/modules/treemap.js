@@ -1,16 +1,14 @@
 import $                                from 'jquery'
 import * as d3                          from 'd3'
 import PubSub                           from 'pubsub-js'
-import data                             from '../data/tree.json'
+import data                             from '../data/treemaps.json'
 import throttle                         from '../utils/throttle.js'
 
 const HIC_COLOR = '#ae3637'
 const UMIC_COLOR = '#b9595a'
 const LMIC_COLOR = '#c98586'
 const color = {'HIC': HIC_COLOR, 'UMIC': UMIC_COLOR, 'LMIC': LMIC_COLOR}
-const SENDING_DATA = data[0]
-const RECEIVING_DATA = data[1]
-
+const DATA = data[0]
 
 class Treemap {
     constructor() {
@@ -23,12 +21,11 @@ class Treemap {
         this.$window = $(window)
         this.nodes = null
         this.treemap = null
-        this.texts = null
         this.windowWidth = this.$window.outerWidth()
         this.root = null
         this.mobile = false
-        this.data = SENDING_DATA
         this.tree = null
+        this.data = DATA
         this.dataNode = null
         this.activeIncome = null
         this.$labels = this.$container.find('.treemap__label')
@@ -61,13 +58,13 @@ class Treemap {
         this.$labels.addClass('treemap__label--active')
         this.resize()
         this.$container.addClass(`treemap__container--${this.activeIncome} treemap__container--active`)
-        if (this.activeIncome === 'HIC') {
-            this.data = this.modeSending ? SENDING_DATA.children[0] : RECEIVING_DATA.children[0]
-        } else if (this.activeIncome === 'UMIC') {
-            this.data = this.modeSending ? SENDING_DATA.children[1] : RECEIVING_DATA.children[1]
-        } else {
-            this.data = this.modeSending ? SENDING_DATA.children[2] : RECEIVING_DATA.children[2]
-        }
+        // if (this.activeIncome === 'HIC') {
+        //     this.data = DATA.children[0]
+        // } else if (this.activeIncome === 'UMIC') {
+        //     this.data = DATA.children[1]
+        // } else {
+        //     this.data = DATA.children[2]
+        // }
         this.update()
     }
 
@@ -77,7 +74,7 @@ class Treemap {
         this.$page.removeClass('active')
         this.resize()
         this.activeIncome = null
-        this.data = this.modeSending ? SENDING_DATA : RECEIVING_DATA
+        // this.data = DATA
         this.update()
     }
 
@@ -109,22 +106,18 @@ class Treemap {
         } else {
             this.height = 0.58 * this.width    
         }
-        
-        this.treemap.size([this.width, this.height])
-        this.treemap(this.root)
 
-        this.nodes.style('left', (d) => d.x0 + 'px')
-        this.nodes.style('top', (d) => d.y0 + 'px')
-        this.nodes.style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
-        this.nodes.style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
         this.windowWidth = this.$window.outerWidth()
+        this.update()
     }
 
     setupGraph() {
-        this.treemap = d3.treemap().size([this.width, this.height]).paddingOuter(5)
+        this.treemap = d3.treemap().size([this.width, this.height]).paddingOuter(5).paddingInner(0)
 
         this.root = d3.hierarchy(this.data, (d) => d.children)
-            .sum((d) => d.size)
+            .sum((d) => {
+                return this.modeSending ? d.sending : d.receiving
+            })
         
 
         this.tree = this.treemap(this.root)
@@ -142,20 +135,48 @@ class Treemap {
                     .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                     .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
                     .style('background', (d) => color[d.parent.data.name])
+                    .style('border', (d) => {
+                        if (this.modeSending) {
+                            return d.sending > 0 ? '1px solid white' : 'none'
+                        } else {
+                            return d.receiving > 0 ? '1px solid white' : 'none'
+                        }
+                    })
 
-        this.texts = nodes.append('span')
+        nodes.append('span')
             .attr('class', 'treemap__node-text')
-            .text((d) => `${d.data.name} ${d.data.size} transactions`) 
+            .text((d) => {
+                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+            }) 
+
+        nodes.append('span')
+            .attr('class', 'treemap__country-name')
+            .text((d) => {
+                if (Math.max(0, d.x1 - d.x0 - 1) * Math.max(0, d.y1 - d.y0  - 1) > 4200) {
+                    return d.data.name
+                } else {
+                    return ''
+                }
+            })
+
 
         this.$tooltips = $('.treemap__node-text')
         this.nodes = d3.selectAll('.treemap__node')
     }
 
     update() {
-        this.treemap = d3.treemap().size([this.width, this.height]).paddingOuter(5)
+        this.treemap = d3.treemap().size([this.width, this.height]).paddingOuter(5).paddingInner(0)
 
         this.root = d3.hierarchy(this.data, (d) => d.children)
-            .sum((d) => d.size)
+            .sum((d) => {
+                if (this.activeIncome === null) {
+                    return this.modeSending ? d.sending : d.receiving
+                } else if (d.income === this.activeIncome) {
+                    return this.modeSending ? d.sending : d.receiving
+                } else {
+                    return 0
+                }
+            })
         
 
         this.tree = this.treemap(this.root)
@@ -172,15 +193,34 @@ class Treemap {
                 .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                 .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
                 .style('background', (d) => color[d.parent.data.name])
+                .style('border', (d) => {
+                    if (this.modeSending) {
+                        return d.sending > 0 ? '1px solid white' : 'none'
+                    } else {
+                        return d.receiving > 0 ? '1px solid white' : 'none'
+                    }
+                })
 
         nodesEnter.append('span')
             .attr('class', 'treemap__node-text')
-            .text((d) => `${d.data.name} ${d.data.size} transactions`) 
+            .text((d) => {
+                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+            }) 
+
+        nodesEnter.append('span')
+            .attr('class', 'treemap__country-name')
+            .text((d) => {
+                if (Math.max(0, d.x1 - d.x0 - 1) * Math.max(0, d.y1 - d.y0  - 1) > 4200) {
+                    return d.data.name
+                } else {
+                    return ''
+                }
+            })
 
         this.dataNode.exit()
             .remove()
 
-        this.dataNode.transition()
+        this.dataNode.transition().duration(350)
             .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name}`)
             .attr('data-income', (d) => d.parent.data.name)
             .style('left', (d) => d.x0 + 'px')
@@ -188,11 +228,24 @@ class Treemap {
             .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
             .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
             .style('background', (d) => color[d.parent.data.name])
-            .selectAll('.treemap__node-text').remove()
+            .selectAll('.treemap__node-text, .treemap__country-name').remove()
 
         this.dataNode.append('span')
             .attr('class', 'treemap__node-text')
-            .text((d) => `${d.data.name} ${d.data.size} transactions`) 
+            .text((d) => {
+                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+            }) 
+
+        this.dataNode.append('span')
+            .attr('class', 'treemap__country-name')
+            .text((d) => {
+                if (Math.max(0, d.x1 - d.x0 - 1) * Math.max(0, d.y1 - d.y0  - 1) > 4200) {
+                    return d.data.name
+                } else {
+                    return ''
+                }
+            })
+
         
         this.$tooltips = $('.treemap__node-text')
         this.nodes = d3.selectAll('.treemap__node')
@@ -200,16 +253,7 @@ class Treemap {
 
     switchMode() {
         this.modeSending = !this.modeSending
-
-        // let newRoot = null
-
-        if (this.modeSending) {
-            this.data = SENDING_DATA
-            this.update()
-        } else {
-            this.data = RECEIVING_DATA
-            this.update()   
-        }
+        this.update()
     }
 }
 

@@ -92,7 +92,8 @@ module.exports = {
                         countries[sendingIndex]['children'].push({
                             'name': data[i]['sending_country'],
                             'sending': data[i]['sending_total'],
-                            'receiving': 0
+                            'receiving': 0,
+                            'income': countries[sendingIndex]['name']
                         })
                     }
                 }
@@ -104,7 +105,8 @@ module.exports = {
                         countries[receivingIndex]['children'].push({
                             'name': data[i]['receiving_country'],
                             'sending': 0,
-                            'receiving': data[i]['sending_total']
+                            'receiving': data[i]['sending_total'],
+                            'income': countries[receivingIndex]['name']
                         })
                     }
                 }
