@@ -29,6 +29,8 @@ class Treemap {
         this.dataNode = null
         this.activeIncome = null
         this.$labels = this.$container.find('.treemap__label')
+        this.mouseX = 0
+        this.mouseY = 0
     }
 
     init() {
@@ -52,7 +54,6 @@ class Treemap {
     }
 
     zoomIn(e) {
-        e.stopPropagation()
         this.activeIncome = $(e.currentTarget).data('income')
         this.$page.addClass('active')
         this.$labels.addClass('treemap__label--active')
@@ -67,24 +68,24 @@ class Treemap {
         this.$page.removeClass('active')
         this.resize()
         this.activeIncome = null
-        // this.data = DATA
         this.update()
     }
 
     positionTooltip(e) {
-        const x = e.clientX
-        const y = e.clientY
+        this.mouseX = e.clientX
+        this.mouseY = e.clientY
+        this.$tooltips.removeAttr('style')
         
-        if (x > this.windowWidth / 2) {
+        if (this.mouseX > this.windowWidth / 2) {
             this.$tooltips.css({
-                top: y + 'px',
-                left: (x - 20) + 'px',
+                top: this.mouseY + 'px',
+                left: (this.mouseX - 20) + 'px',
                 transform: 'translateX(-100%)'
             })
         } else {
             this.$tooltips.css({
-                top: y + 'px',
-                left: (x + 20) + 'px',
+                top: this.mouseY + 'px',
+                left: (this.mouseX + 20) + 'px',
                 transform: 'none'
             })
         }
@@ -140,7 +141,8 @@ class Treemap {
             .attr('class', 'treemap__node-text')
             .text((d) => {
                 return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
-            }) 
+            })
+            .style('display', 'none')
 
         nodes.append('span')
             .attr('class', 'treemap__country-name')
@@ -198,7 +200,8 @@ class Treemap {
             .attr('class', 'treemap__node-text')
             .text((d) => {
                 return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
-            }) 
+            })
+            .style('display', 'none')
 
         nodesEnter.append('span')
             .attr('class', 'treemap__country-name')
@@ -227,7 +230,8 @@ class Treemap {
             .attr('class', 'treemap__node-text')
             .text((d) => {
                 return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
-            }) 
+            })
+            .style('display', 'none')
 
         this.dataNode.append('span')
             .attr('class', 'treemap__country-name')

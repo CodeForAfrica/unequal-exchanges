@@ -21,7 +21,6 @@
     }
 
     &__node {
-        // border: solid 1px white;
         font: 10px sans-serif;
         line-height: 12px;
         overflow: visible;
@@ -56,7 +55,6 @@
 
     &__country-name {
         color: $white;
-        display: none;
         font-size: rem(12);
         line-height: rem(14);
         left: 50%;
@@ -67,12 +65,6 @@
         top: 50%;
         transform: translate(-50%, -50%);
         width: 90%;
-
-        .treemap__container--HIC .treemap__node--HIC &,
-        .treemap__container--UMIC .treemap__node--UMIC &,
-        .treemap__container--LMIC .treemap__node--LMIC & {
-            display: block;
-        }
     }
 
     &__label {
