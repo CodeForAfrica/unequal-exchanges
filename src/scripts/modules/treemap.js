@@ -97,8 +97,10 @@ class Treemap {
         if (window.matchMedia('(max-width: 1000px)').matches) {
             this.mobile = true
             this.height = 1.5 * this.width
+        } else if (this.$page.hasClass('active')) {
+            this.height = 0.58 * (this.width - 145)
         } else {
-            this.height = 0.58 * this.width    
+            this.height = 0.58 * this.width
         }
 
         this.windowWidth = this.$window.outerWidth()

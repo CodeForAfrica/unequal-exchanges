@@ -2,11 +2,17 @@
     min-width: rem(320);
     overflow: hidden;
 
-    .treemap__wrapper {
+    &__wrapper {
         padding: 0 rem(275) rem(80) rem(130);
 
+        .treemap.active & {
+            padding: 0 rem(130) rem(80);
+        }
+
         @media (max-width: 62.5em) {
-            padding: 0 rem(20) rem(100);
+            &, .treemap.active & {
+                padding: 0 rem(20) rem(100);
+            }
         }
     }
 
