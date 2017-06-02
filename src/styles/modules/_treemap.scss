@@ -95,24 +95,28 @@
         }
 
         .treemap__container--active & {
-            background: url('../../img/arrow-left.svg') left center no-repeat;
-            bottom: 100%;
-            left: rem(10);
-            padding-left: rem(40);
-            right: auto;
-            text-align: left;
-            top: auto;
-            width: auto;
+            display: none;
+        }
+    }
+
+    &__label--back {
+        background: url('../../img/arrow-left.svg') left center no-repeat;
+        bottom: 100%;
+        display: none;
+        left: rem(10);
+        padding-left: rem(40);
+        right: auto;
+        top: auto;
+        width: auto;
+
+        .treemap__container--active & {
+            display: block;
         }
     }
 
     &__label--hic {
         bottom: 100%;
         left: rem(10);
-
-        .treemap__container--UMIC &, .treemap__container--LMIC & {
-            display: none;
-        }
     }
 
     &__label--umic {
@@ -122,10 +126,6 @@
         @media (max-width: 62.5em) {
             left: rem(10);
             top: 100%;
-        }
-
-        .treemap__container--HIC &, .treemap__container--LMIC & {
-            display: none;
         }
     }
 
@@ -139,10 +139,6 @@
             right: rem(10);
             text-align: right;
             top: 100%;
-        }
-
-        .treemap__container--UMIC &, .treemap__container--HIC & {
-            display: none;
         }
     }
 }

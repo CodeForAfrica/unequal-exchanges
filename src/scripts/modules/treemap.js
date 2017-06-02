@@ -1,13 +1,12 @@
 import $                                from 'jquery'
 import * as d3                          from 'd3'
+import {COLOR_SENDING, COLOR_RECEIVING} from './globals'
 import PubSub                           from 'pubsub-js'
 import data                             from '../data/treemaps.json'
-import throttle                         from '../utils/throttle.js'
+import throttle                         from '../utils/throttle'
 
-const HIC_COLOR = '#ae3637'
-const UMIC_COLOR = '#b9595a'
-const LMIC_COLOR = '#c98586'
-const color = {'HIC': HIC_COLOR, 'UMIC': UMIC_COLOR, 'LMIC': LMIC_COLOR}
+const COLORS_SENDING = {'HIC': COLOR_SENDING, 'UMIC': '#71B9CB', 'LMIC': '#95CBD7'}
+const COLORS_RECEIVING = {'HIC': COLOR_RECEIVING, 'UMIC': '#E3B753', 'LMIC': '#EBC97D'}
 const DATA = data[0]
 
 class Treemap {
@@ -41,8 +40,8 @@ class Treemap {
 
         this.setupGraph()
         this.$container.on('click', '.treemap__node', this.zoomIn.bind(this))
-        this.$page.on('click', '.treemap__label:not(.treemap__label--active)', this.zoomIn.bind(this))
-        this.$page.on('click', '.treemap__label--active', this.zoomOut.bind(this))
+        this.$page.on('click', '.treemap__label:not(.treemap__label--back)', this.zoomIn.bind(this))
+        this.$page.on('click', '.treemap__label--back', this.zoomOut.bind(this))
 
         PubSub.subscribe('keyChanged', this.switchMode.bind(this))
 
@@ -56,7 +55,6 @@ class Treemap {
     zoomIn(e) {
         this.activeIncome = $(e.currentTarget).data('income')
         this.$page.addClass('active')
-        this.$labels.addClass('treemap__label--active')
         this.resize()
         this.$container.addClass(`treemap__container--${this.activeIncome} treemap__container--active`)
         this.update()
@@ -64,7 +62,6 @@ class Treemap {
 
     zoomOut() {
         this.$container.removeClass(`treemap__container--${this.activeIncome} treemap__container--active`)
-        this.$labels.removeClass('treemap__label--active')
         this.$page.removeClass('active')
         this.resize()
         this.activeIncome = null
@@ -130,7 +127,9 @@ class Treemap {
                     .style('top', (d) => d.y0 + 'px')
                     .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                     .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-                    .style('background', (d) => color[d.parent.data.name])
+                    .style('background', (d) => {
+                        return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
+                    })
                     .style('border', (d) => {
                         if (this.modeSending) {
                             return d.sending > 0 ? '1px solid white' : 'none'
@@ -189,7 +188,9 @@ class Treemap {
                 .style('top', (d) => d.y0 + 'px')
                 .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                 .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-                .style('background', (d) => color[d.parent.data.name])
+                .style('background', (d) => {
+                    return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
+                })
                 .style('border', (d) => {
                     if (this.modeSending) {
                         return d.sending > 0 ? '1px solid white' : 'none'
@@ -225,7 +226,9 @@ class Treemap {
             .style('top', (d) => d.y0 + 'px')
             .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
             .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-            .style('background', (d) => color[d.parent.data.name])
+            .style('background', (d) => {
+                return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
+            })
             .selectAll('.treemap__node-text, .treemap__country-name').remove()
 
         this.dataNode.append('span')
