@@ -7,10 +7,9 @@ import throttle                         from '../utils/throttle.js'
 let MAX_TOTAL = 0
 let COUNTRY_WIDTH = 0
 let COUNTRY_HEIGHT = 0
-let LINES_ARRAY = []
-const COLOR_LINES = '#D8D8D8'
-const COLOR_LINES_DARK = '#A5A5A5'
-
+let CANVAS_ARRAY = []
+const COLOR_LINES = 216
+const COLOR_LINES_DARK = 165
 
 class Transactions {
     constructor() {
@@ -18,7 +17,11 @@ class Transactions {
         this.$countries = null
         this.width = this.$container.outerWidth()
         this.height = this.$container.outerHeight()
-        this.svg = d3.select('.transactions__svg')
+        this.canvas = null
+        this.customBase = null
+        this.custom = null
+        this.$canvas = $('.transactions__canvas-container')
+        this.modeSending = true
         this.$active = $('.transactions__active')
         this.$activeName = $('.transactions__active__name')
         this.$activeTotal = $('.transactions__active__total')
@@ -26,14 +29,14 @@ class Transactions {
         this.$window = $(window)
         this.$instructions = $('.transactions__instruction')
         this.$circles = $('.transactions__sending')
-        this.lines = null
-        this.modeSending = true
     }
 
     init() {
         this.addCountries()
         this.calculateSizes()
-        this.drawLines()
+        this.setupCanvas()
+        this.databind()
+        this.draw()
         this.mouseEvents()
 
         PubSub.subscribe('keyChanged', this.switchMode.bind(this))
@@ -56,15 +59,6 @@ class Transactions {
                     'height': receivingWidth
                 })
             })
-            
-            this.lines.attr('opacity', (d) => {
-                if (d.bilateral) {
-                    return 1
-                } else {
-                    return 0
-                }
-            })
-
         } else {
             this.$circles.addClass('transactions__sending').removeClass('transactions__receiving')  
             this.$circles.each((index, element) => {
@@ -76,9 +70,17 @@ class Transactions {
                     'height': sendingWidth
                 })
             }) 
-
-            this.lines.attr('opacity', 1)
         }
+
+        for(let i = 0; i < CANVAS_ARRAY.length; i++) {
+            if (this.modeSending && !CANVAS_ARRAY[i].bilateral) {
+                CANVAS_ARRAY[i].status = 'hidden'    
+            } else {
+                CANVAS_ARRAY[i].status = 'neutral'
+            }
+        }
+
+        this.refreshCanvas()
         
         this.modeSending = !this.modeSending
     }
@@ -89,7 +91,9 @@ class Transactions {
 
         this.width = this.$container.outerWidth()
         this.height = this.$container.outerHeight()
-        this.svg.attr('viewBox', `0 0 ${this.width} ${this.height}`)
+
+        this.canvas.attr('width', this.width * 2)
+            .attr('height', this.height * 2)
 
         const $activeCountry = $('.transactions__country.active')
         let receivingIds = null
@@ -118,48 +122,110 @@ class Transactions {
             }
         })
 
-        this.lines
+        this.refreshCanvas()
+    }
+
+    setupCanvas() {
+        this.width = this.$container.outerWidth()
+        this.height = this.$container.outerHeight()
+        this.canvas = d3.select('.transactions__canvas-container')
+            .append('canvas')
+            .classed('transactions__canvas', true)
+            .attr('width', this.width * 2)
+            .attr('height', this.height * 2)
+        this.customBase = document.createElement('custom')
+        this.custom = d3.select(this.customBase)
+    }
+
+    databind() {
+        let join = this.custom.selectAll('custom.line')
+            .data(CANVAS_ARRAY)
+
+        const canvasLeft = this.$canvas.offset().left
+        
+        let enterSel = join.enter()
+            .append('custom')
+            .attr('class', 'line')
             .attr('x1', (d) => {
                 let $country = $(`#country-${d.sending}`)
-                return $country.offset().left + COUNTRY_WIDTH / 2 - this.$container.offset().left
+                return 2 * Math.floor($country.offset().left + COUNTRY_WIDTH / 2 - canvasLeft) + 0.5
             })
             .attr('y1', (d) => {
                 let $country = $(`#country-${d.sending}`)
-                return $country.offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2
+                return 2 * Math.floor($country.offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2) + 0.5
             })
             .attr('x2', (d) => {
-                return $(`#country-${d.receiving}`).offset().left - this.$container.offset().left + COUNTRY_WIDTH / 2
+                return 2 * Math.floor($(`#country-${d.receiving}`).offset().left + COUNTRY_WIDTH / 2 - canvasLeft) + 0.5
             })
             .attr('y2', (d) => {
-                return $(`#country-${d.receiving}`).offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2
+                return 2 * Math.floor($(`#country-${d.receiving}`).offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2) + 0.5
+            })
+            .attr('stroke-width', 1)
+            .attr('stroke', (d) => {
+                if (d.status === 'active') {
+                    return COLOR_LINES_DARK
+                } else {
+                    return COLOR_LINES
+                }
+            })
+            .attr('opacity', (d) => {
+                if (d.status === 'hidden') {
+                    return 0
+                } else {
+                    return 1
+                }
+            })
+
+        join.merge(enterSel)
+            .transition()
+            .attr('x1', (d) => {
+                let $country = $(`#country-${d.sending}`)
+                return 2 * Math.floor($country.offset().left + COUNTRY_WIDTH / 2 - canvasLeft) + 0.5
+            })
+            .attr('y1', (d) => {
+                let $country = $(`#country-${d.sending}`)
+                return 2 * Math.floor($country.offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2) + 0.5
+            })
+            .attr('x2', (d) => {
+                return 2 * Math.floor($(`#country-${d.receiving}`).offset().left + COUNTRY_WIDTH / 2 - canvasLeft) + 0.5
+            })
+            .attr('y2', (d) => {
+                return 2 * Math.floor($(`#country-${d.receiving}`).offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2) + 0.5
+            })
+            .attr('stroke', (d) => {
+                if (d.status === 'active') {
+                    return COLOR_LINES_DARK
+                } else {
+                    return COLOR_LINES
+                }
+            })
+            .attr('opacity', (d) => {
+                if (d.status === 'hidden') {
+                    return 0
+                } else {
+                    return 1
+                }
             })
     }
 
-    drawLines() {
-        let lines = this.svg.selectAll('.country__line')
-            .data(LINES_ARRAY)
+    draw() {
+        // build context
+        let context = this.canvas.node().getContext('2d')
 
-        lines.enter()
-            .append('line')
-            .attr('x1', (d) => {
-                let $country = $(`#country-${d.sending}`)
-                return $country.offset().left + COUNTRY_WIDTH / 2 - this.$container.offset().left
-            })
-            .attr('y1', (d) => {
-                let $country = $(`#country-${d.sending}`)
-                return $country.offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2
-            })
-            .attr('x2', (d) => {
-                return $(`#country-${d.receiving}`).offset().left - this.$container.offset().left + COUNTRY_WIDTH / 2
-            })
-            .attr('y2', (d) => {
-                return $(`#country-${d.receiving}`).offset().top - this.$container.offset().top + 11 + COUNTRY_HEIGHT / 2
-            })
-            .attr('stroke', COLOR_LINES)
-            .attr('stroke-width', 1)
-            .attr('class', 'country__line') 
+        // clear canvas
+        context.clearRect(0, 0, this.width * 2, this.height * 2)
+
+        const elements = this.custom.selectAll('custom.line')
         
-        this.lines = d3.selectAll('.country__line')
+        elements.each(function() { // for each virtual/custom element...
+            const node = d3.select(this)
+            context.strokeStyle = `rgba(${node.attr('stroke')}, ${node.attr('stroke')}, ${node.attr('stroke')}, ${node.attr('opacity')})`
+            context.lineWidth = node.attr('stroke-width')
+            context.beginPath()
+            context.moveTo(node.attr('x1'), node.attr('y1'))
+            context.lineTo(node.attr('x2'), node.attr('y2'))
+            context.stroke()
+        })
     }
 
     addCountries() {
@@ -177,6 +243,19 @@ class Transactions {
                 let receivingArray = []
                 $.each(country.receiving_countries, (index, receivingCountry) => {
                     receivingArray.push(receivingCountry.id)
+                    if ($.grep(CANVAS_ARRAY, (e) => {
+                        return e.sending === receivingCountry.id && e.receiving === country.id
+                    }).length <= 0) {
+                        let bilateral = $.grep(country.sending_countries, (e) => {
+                            return e.id === receivingCountry.id 
+                        }).length > 0
+                        CANVAS_ARRAY.push({
+                            'sending': country.id, 
+                            'receiving': receivingCountry.id, 
+                            'bilateral': bilateral, 
+                            'status': 'neutral'
+                        })
+                    }
                 })
                 return receivingArray
             })
@@ -208,8 +287,10 @@ class Transactions {
             this.$container.append($countryDiv)           
         })
 
-        this.$countries = $('.transactions__country')
         this.$circles = $('.transactions__sending')
+        this.$countries = $('.transactions__country')
+
+        this.calculateSizes()
     }
 
     calculateSizes() {
@@ -223,43 +304,54 @@ class Transactions {
                 'width': sendingWidth, 
                 'height': sendingWidth
             })
-            
-            $.each(country.receiving_countries, (i, receivingCountry) => {
-                if (LINES_ARRAY.find((e) => {
-                    return e.sending === receivingCountry.id && e.receiving === country.id
-                }) === undefined) {
-                    let bilateral = $.grep(country.sending_countries, (e) => {
-                        return e.id === receivingCountry.id 
-                    }).length > 0
-                    LINES_ARRAY.push({
-                        'sending': country.id, 
-                        'receiving': receivingCountry.id, 
-                        'bilateral': bilateral, 
-                        'status': 'neutral'
-                    })
-                }
-            })
-        })
+        })        
+
         this.height = this.$container.outerHeight()
-        this.svg.attr('viewBox', `0 0 ${this.width} ${this.height}`)
+    }
+
+    refreshCanvas(callback = false) {
+        this.databind()
+
+        let t = d3.timer((elapsed) => {
+         
+            this.draw()
+      
+            if (elapsed > 350) {
+                t.stop()
+
+                if (callback !== false) {
+                    callback()
+                }
+            }
+        })
     }
 
     mouseEvents() {
         this.$countries.on('mouseenter', (e) => {
             const $country = $(e.currentTarget)
             const id = $country.data('id')
-
-            this.lines.filter((d) => {
+            for(let i = 0; i < CANVAS_ARRAY.length; i++) {
+                let entry = CANVAS_ARRAY[i]
                 if (this.modeSending) {
-                    return d.sending === id || (d.receiving === id && d.bilateral)
+                    if (entry.sending === id || (entry.receiving === id && entry.bilateral)) {
+                        CANVAS_ARRAY[i].status = 'active'
+                    }
                 } else {
-                    return d.receiving === id || (d.sending === id && d.bilateral)
+                    if (entry.receiving === id || (entry.sending === id && entry.bilateral)) {
+                        CANVAS_ARRAY[i].status = 'active'
+                    }
                 }
-            })
-            .raise()
-            .transition()
-                .duration(350)
-                .attr('stroke', COLOR_LINES_DARK)
+            }
+            this.refreshCanvas()
+        })
+
+        this.$countries.on('mouseleave', () => { 
+            for(let i = 0; i < CANVAS_ARRAY.length; i++) {
+                if (this.modeSending || CANVAS_ARRAY[i].bilateral) {
+                    CANVAS_ARRAY[i].status = 'neutral'
+                }
+            }
+            this.refreshCanvas()
         })
 
         this.$countries.on('click.select', (e) => {
@@ -301,31 +393,20 @@ class Transactions {
                 })
             })
 
-            this.lines
-                .filter((d) => {
-                    if (this.modeSending) {
-                        return d.sending !== id && (d.receiving !== id || !d.bilateral)
-                    } else {
-                        return d.receiving !== id && (d.sending !== id || !d.bilateral)
+            for(let i = 0; i < CANVAS_ARRAY.length; i++) {
+                const d = CANVAS_ARRAY[i]
+                if(this.modeSending) {
+                    if (d.sending !== id && (d.receiving !== id || !d.bilateral)) {
+                        CANVAS_ARRAY[i].status = 'hidden'
                     }
-                })
-                .transition()
-                    .duration(350)
-                    .attr('opacity', 0)
+                } else {
+                    if (d.receiving !== id && (d.sending !== id || !d.bilateral)) {
+                        CANVAS_ARRAY[i].status = 'hidden'
+                    }
+                }
+            }
 
-            
-            this.lines
-                .filter((d) => {
-                    if (this.modeSending) {
-                        return d.sending === id || (d.receiving === id && d.bilateral)
-                    } else {
-                        return d.receiving === id || (d.sending === id && d.bilateral)
-                    }
-                })
-                .transition()
-                    .duration(350)
-                    .attr('opacity', 1)
-                    .attr('stroke', COLOR_LINES)
+            this.refreshCanvas()
 
             this.$active.on('click.deselect', () => {
                 this.deselect()
@@ -334,24 +415,6 @@ class Transactions {
             $('.transactions__country.hide').on('click.deselect', () => {
                 this.deselect()
             })
-        })
-
-        this.$countries.on('mouseleave', () => { 
-            this.lines
-                .transition()
-                    .duration(350)
-                    .attr('opacity', (d) => {
-                        if (this.modeSending) {
-                            return 1
-                        } else {
-                            if (d.bilateral) {
-                                return 1
-                            } else {
-                                return 0
-                            }
-                        }
-                    })
-                    .attr('stroke', COLOR_LINES)
         })
     }
 
@@ -362,26 +425,22 @@ class Transactions {
         this.$active.removeClass('active')
         this.$countries.removeClass('hide linked active')
         this.$instructions.removeClass('hide')
-        this.lines
-            .transition()
-                .duration(350)
-                .attr('opacity', (d) => {
-                    if (this.modeSending) {
-                        return 1
-                    } else {
-                        if (d.bilateral) {
-                            return 1
-                        } else {
-                            return 0
-                        }
-                    }
-                })
-                .attr('stroke', COLOR_LINES)
-                .on('end', (d, i) => {
-                    if (i === this.$countries.length - 1) {
-                        this.mouseEvents()
-                    }
-                })
+
+        for(let i = 0; i < CANVAS_ARRAY.length; i++) {
+            const d = CANVAS_ARRAY[i]
+            if (this.modeSending) {
+                CANVAS_ARRAY[i].status = 'neutral'
+            } else {
+                if (d.bilateral) {
+                    CANVAS_ARRAY[i].status = 'neutral'
+                } else {
+                    CANVAS_ARRAY[i].status = 'hidden'
+                }
+            }
+        }
+
+        this.refreshCanvas(this.mouseEvents.bind(this))
+
         // $.each(receivingIds, (index, countryId) => {
         this.$circles.each((index, element) => {
             const $circle = $(element)

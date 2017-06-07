@@ -73,7 +73,7 @@ module.exports = {
     },
 
     treemaps: function() {
-         var countries = [
+        var countries = [
             {'name': 'HIC', 'children': []},
             {'name': 'UMIC', 'children': []},
             {'name': 'LMIC', 'children': []}

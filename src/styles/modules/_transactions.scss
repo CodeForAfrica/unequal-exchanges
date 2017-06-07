@@ -31,6 +31,7 @@
         float: left;
         height: rem(22);
         padding-bottom: 6.666%;
+        pointer-events: all;
         position: relative;
         transition: opacity 350ms;
         width: 6.666%;
@@ -308,5 +309,10 @@
         top: 0;
         width: 100%;
         z-index: -1;
+    }
+
+    &__canvas-container canvas {
+        transform: scale(0.5, 0.5);
+        transform-origin: 0 0;
     }
 }
