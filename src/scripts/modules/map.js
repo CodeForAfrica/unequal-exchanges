@@ -64,7 +64,7 @@ class Map {
 
     checkHeight() {
         const WINDOW_HEIGHT = this.$window.outerHeight()
-        if (this.$infographic.outerHeight() > WINDOW_HEIGHT) {
+        if (this.$container.outerHeight() + this.$timeline.outerHeight() > WINDOW_HEIGHT) {
             const CONTAINER_HEIGHT = this.$container.outerHeight()
             this.$infographic.css('height', WINDOW_HEIGHT > CONTAINER_HEIGHT ? WINDOW_HEIGHT : CONTAINER_HEIGHT)
             this.$timeline.addClass('absolute')
