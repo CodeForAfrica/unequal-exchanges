@@ -72,14 +72,6 @@ class Transactions {
             }) 
         }
 
-        for(let i = 0; i < CANVAS_ARRAY.length; i++) {
-            if (this.modeSending && !CANVAS_ARRAY[i].bilateral) {
-                CANVAS_ARRAY[i].status = 'hidden'    
-            } else {
-                CANVAS_ARRAY[i].status = 'neutral'
-            }
-        }
-
         this.refreshCanvas()
         
         this.modeSending = !this.modeSending
@@ -347,9 +339,7 @@ class Transactions {
 
         this.$countries.on('mouseleave', () => { 
             for(let i = 0; i < CANVAS_ARRAY.length; i++) {
-                if (this.modeSending || CANVAS_ARRAY[i].bilateral) {
-                    CANVAS_ARRAY[i].status = 'neutral'
-                }
+                CANVAS_ARRAY[i].status = 'neutral'
             }
             this.refreshCanvas()
         })
@@ -427,16 +417,7 @@ class Transactions {
         this.$instructions.removeClass('hide')
 
         for(let i = 0; i < CANVAS_ARRAY.length; i++) {
-            const d = CANVAS_ARRAY[i]
-            if (this.modeSending) {
-                CANVAS_ARRAY[i].status = 'neutral'
-            } else {
-                if (d.bilateral) {
-                    CANVAS_ARRAY[i].status = 'neutral'
-                } else {
-                    CANVAS_ARRAY[i].status = 'hidden'
-                }
-            }
+            CANVAS_ARRAY[i].status = 'neutral'
         }
 
         this.refreshCanvas(this.mouseEvents.bind(this))

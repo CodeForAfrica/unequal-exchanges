@@ -56,15 +56,6 @@ class Transactions {
                     'height': receivingWidth
                 })
             })
-            
-            this.lines.attr('opacity', (d) => {
-                if (d.bilateral) {
-                    return 1
-                } else {
-                    return 0
-                }
-            })
-
         } else {
             this.$circles.addClass('transactions__sending').removeClass('transactions__receiving')  
             this.$circles.each((index, element) => {
@@ -76,8 +67,6 @@ class Transactions {
                     'height': sendingWidth
                 })
             }) 
-
-            this.lines.attr('opacity', 1)
         }
         
         this.modeSending = !this.modeSending
@@ -340,17 +329,7 @@ class Transactions {
             this.lines
                 .transition()
                     .duration(350)
-                    .attr('opacity', (d) => {
-                        if (this.modeSending) {
-                            return 1
-                        } else {
-                            if (d.bilateral) {
-                                return 1
-                            } else {
-                                return 0
-                            }
-                        }
-                    })
+                    .attr('opacity', 1)
                     .attr('stroke', COLOR_LINES)
         })
     }
@@ -365,23 +344,9 @@ class Transactions {
         this.lines
             .transition()
                 .duration(350)
-                .attr('opacity', (d) => {
-                    if (this.modeSending) {
-                        return 1
-                    } else {
-                        if (d.bilateral) {
-                            return 1
-                        } else {
-                            return 0
-                        }
-                    }
-                })
+                .attr('opacity', 1)
                 .attr('stroke', COLOR_LINES)
-                .on('end', (d, i) => {
-                    if (i === this.$countries.length - 1) {
-                        this.mouseEvents()
-                    }
-                })
+
         // $.each(receivingIds, (index, countryId) => {
         this.$circles.each((index, element) => {
             const $circle = $(element)
@@ -395,6 +360,8 @@ class Transactions {
                 'height': circleWidth
             })
         })
+
+        this.mouseEvents()
     }
 }
 
