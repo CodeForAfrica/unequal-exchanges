@@ -32,12 +32,79 @@
         overflow: visible;
         position: absolute;
         text-indent: 2px;
+        transition: background 350ms;
 
         &:hover,
         &:active,
         &:focus {
+            cursor: default;
+
             .treemap__node-text {
                 display: block;
+            }
+        }
+
+        &--true {
+            &.treemap__node--HIC {
+                background: $blue;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($blue, 10%)
+                }
+            }
+
+            &.treemap__node--UMIC {
+                background: $blue-lighter;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($blue-lighter, 10%)
+                }
+            }
+
+            &.treemap__node--LMIC {
+                background: $blue-lightest;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($blue-lightest, 10%)
+                }
+            }
+        }
+
+        &--false {
+            &.treemap__node--HIC {
+                background: $gold;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($gold, 10%)
+                }
+            }
+
+            &.treemap__node--UMIC {
+                background: $gold-lighter;
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($gold-lighter, 10%)
+                }
+            }
+
+            &.treemap__node--LMIC {
+                background: $gold-lightest; 
+
+                &:hover,
+                &:active,
+                &:focus {
+                    background: darken($gold-lightest, 10%)
+                }   
             }
         }
     }
@@ -50,7 +117,6 @@
         line-height: rem(22);
         padding: rem(5) rem(20);
         position: fixed;
-        text-transform: uppercase;
         white-space: nowrap;
         z-index: 1000;
 

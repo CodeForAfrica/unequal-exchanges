@@ -8,7 +8,7 @@ import PubSub                           from 'pubsub-js'
 import throttle                         from '../utils/throttle.js'
 import {COLOR_SENDING, COLOR_RECEIVING} from './globals'
 
-const COLOR_BG = '#EAEAEA'
+const COLOR_BG = '#B5D9E5'
 const COLOR_WHITE = '#FFFFFF'
 const COLOR_TEXT = '#3A3A3A'
 const MAX_YEAR = 2018
@@ -84,6 +84,10 @@ class Map {
                     return d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0
                 })
                 .attr('fill', this.mode === 'receiving' ? COLOR_RECEIVING : COLOR_SENDING)
+        d3.selectAll('.map__country')
+            .transition()
+            .duration(300)
+                .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
     }
 
     drawMap() {
@@ -94,13 +98,25 @@ class Map {
 
         const COUNTRIES = topojson.feature(world, world.objects.countries).features
         
+        const allData = []
+        for (let i = 0; i < COUNTRIES.length; i++) {
+            const country = COUNTRIES[i]
+            const transactionsData = moneyData.filter((obj) => {
+                return obj.country === countryNames[0][country.id]
+            })[0]
+            allData.push(Object.assign({}, country, transactionsData))
+        }
+        
         const COUNTRY_PATHS = this.svg.selectAll('.map__country')
-            .data(COUNTRIES)
+            .data(allData)
             .enter().append('path')
                 .attr('class', 'map__country')
                 .attr('d', PATH)
                 .attr('stroke', COLOR_BG)
-                .attr('fill', '#FFF')
+                .attr('stroke-width', 0.5)
+                .attr('stroke-opacity', 0.7)
+                .attr('fill', '#FFFFFF')
+                .attr('opacity', (d) => d.receiving_2010 !== undefined ? 0.4 + d.receiving_2010 / 300 * 0.6 : 0.4)
                 .attr('data-name', (d) => {
                     d.name = countryNames[0][d.id]
                     return countryNames[0][d.id]
@@ -116,8 +132,12 @@ class Map {
                         const COUNTRY_PATH = COUNTRY_PATHS.filter((i) => {
                             return i.name === d.country
                         })
-                        
-                        return `translate(${PATH.centroid(COUNTRY_PATH.data()[0])})`
+
+                        if (d.country === 'Australia') {
+                            return `translate(${PATH.centroid(COUNTRY_PATH.data()[1])})`
+                        } else {
+                            return `translate(${PATH.centroid(COUNTRY_PATH.data()[0])})`
+                        }
                     }
                 })
                 .attr('data-country', (d) => d.country)
@@ -215,7 +235,7 @@ class Map {
 
     addOverlayCountryText(SHOW_RIGHT, d) {
         this.overlay.append('text')
-            .text(d.country.toUpperCase())
+            .text(d.country)
             .attr('font-size', d.country.length > 22 ? '7' : '11')
             .attr('font-family', 'proxima-nova')
             .attr('x', SHOW_RIGHT ? 40 : 20)
@@ -280,6 +300,10 @@ class Map {
                     .transition()
                         .duration(1000)
                         .attr('r', (d) => d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0)
+                d3.selectAll('.map__country')
+                    .transition()
+                        .duration(1000)
+                        .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
 
                 this.$yearTracker.val(this.year)
 
@@ -309,6 +333,11 @@ class Map {
             .transition()
                 .duration(1000)
                 .attr('r', (d) => d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0)
+
+        d3.selectAll('.map__country')
+            .transition()
+                .duration(1000)
+                .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
 
         this.$yearTracker.val(this.year)
     }

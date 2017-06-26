@@ -1,12 +1,11 @@
 import $                                from 'jquery'
 import * as d3                          from 'd3'
-import {COLOR_SENDING, COLOR_RECEIVING} from './globals'
 import PubSub                           from 'pubsub-js'
 import data                             from '../data/treemaps.json'
 import throttle                         from '../utils/throttle'
 
-const COLORS_SENDING = {'HIC': COLOR_SENDING, 'UMIC': '#71B9CB', 'LMIC': '#95CBD7'}
-const COLORS_RECEIVING = {'HIC': COLOR_RECEIVING, 'UMIC': '#E3B753', 'LMIC': '#EBC97D'}
+// const COLORS_SENDING = {'HIC': COLOR_SENDING, 'UMIC': '#71B9CB', 'LMIC': '#95CBD7'}
+// const COLORS_RECEIVING = {'HIC': COLOR_RECEIVING, 'UMIC': '#E3B753', 'LMIC': '#EBC97D'}
 const DATA = data[0]
 
 class Treemap {
@@ -121,15 +120,12 @@ class Treemap {
         const nodes = this.container.data([this.root]).selectAll('.treemap__node')
             .data(this.tree.leaves()).enter()
                 .append('div')
-                    .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name}`)
+                    .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name} treemap__node--${this.modeSending}`)
                     .attr('data-income', (d) => d.parent.data.name)
                     .style('left', (d) => d.x0 + 'px')
                     .style('top', (d) => d.y0 + 'px')
                     .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                     .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-                    .style('background', (d) => {
-                        return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
-                    })
                     .style('border', (d) => {
                         if (this.modeSending) {
                             return d.sending > 0 ? '1px solid white' : 'none'
@@ -141,7 +137,7 @@ class Treemap {
         nodes.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
             })
             .style('display', 'none')
 
@@ -182,15 +178,12 @@ class Treemap {
 
         const nodesEnter = this.dataNode.enter()
             .append('div')
-                .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name}`)
+                .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name} treemap__node--${this.modeSending}`)
                 .attr('data-income', (d) => d.parent.data.name)
                 .style('left', (d) => d.x0 + 'px')
                 .style('top', (d) => d.y0 + 'px')
                 .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
                 .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-                .style('background', (d) => {
-                    return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
-                })
                 .style('border', (d) => {
                     if (this.modeSending) {
                         return d.sending > 0 ? '1px solid white' : 'none'
@@ -202,7 +195,7 @@ class Treemap {
         nodesEnter.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
             })
             .style('display', 'none')
 
@@ -220,21 +213,18 @@ class Treemap {
             .remove()
 
         this.dataNode.transition().duration(350)
-            .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name}`)
+            .attr('class', (d) => `treemap__node treemap__node--${d.parent.data.name} treemap__node--${this.modeSending}`)
             .attr('data-income', (d) => d.parent.data.name)
             .style('left', (d) => d.x0 + 'px')
             .style('top', (d) => d.y0 + 'px')
             .style('width', (d) => Math.max(0, d.x1 - d.x0 - 1) + 'px')
             .style('height', (d) => Math.max(0, d.y1 - d.y0  - 1) + 'px')
-            .style('background', (d) => {
-                return this.modeSending ? COLORS_SENDING[d.parent.data.name] : COLORS_RECEIVING[d.parent.data.name]
-            })
             .selectAll('.treemap__node-text, .treemap__country-name').remove()
 
         this.dataNode.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name} ${d.data.sending} transactions` : `${d.data.name} ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
             })
             .style('display', 'none')
 

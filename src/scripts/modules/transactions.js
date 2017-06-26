@@ -263,9 +263,9 @@ class Transactions {
             const count = $country.data(`${modeString}CountryCount`)
             const countString =  count > 1 ? `${count} countries` : `${count} country`
             if (this.modeSending) {
-                this.$activeTotal.text(`reports to send ${$country.data('total')} transactions to ${countString}`)
+                this.$activeTotal.text(`sends ${$country.data('total')} transactions to ${countString}`)
             } else {
-                this.$activeTotal.text(`reports to receive ${$country.data('receivingTotal')} transactions from ${countString}`)
+                this.$activeTotal.text(`receives ${$country.data('receivingTotal')} transactions from ${countString}`)
             }
             this.$active.addClass('active')
             this.$instructions.addClass('hide')
