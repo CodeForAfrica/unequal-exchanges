@@ -8,7 +8,7 @@ import PubSub                           from 'pubsub-js'
 import throttle                         from '../utils/throttle.js'
 import {COLOR_SENDING, COLOR_RECEIVING} from './globals'
 
-const COLOR_BG = '#B5D9E5'
+const COLOR_BG = '#539AAD'
 const COLOR_WHITE = '#FFFFFF'
 const COLOR_TEXT = '#3A3A3A'
 const MAX_YEAR = 2018
@@ -84,10 +84,6 @@ class Map {
                     return d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0
                 })
                 .attr('fill', this.mode === 'receiving' ? COLOR_RECEIVING : COLOR_SENDING)
-        d3.selectAll('.map__country')
-            .transition()
-            .duration(300)
-                .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
     }
 
     drawMap() {
@@ -114,9 +110,9 @@ class Map {
                 .attr('d', PATH)
                 .attr('stroke', COLOR_BG)
                 .attr('stroke-width', 0.5)
-                .attr('stroke-opacity', 0.7)
-                .attr('fill', '#FFFFFF')
-                .attr('opacity', (d) => d.receiving_2010 !== undefined ? 0.4 + d.receiving_2010 / 300 * 0.6 : 0.4)
+                // .attr('stroke-opacity', 0.7)
+                .attr('fill', '#EFEFEF')
+                // .attr('opacity', (d) => d.receiving_2010 !== undefined ? 0.4 + d.receiving_2010 / 300 * 0.6 : 0.4)
                 .attr('data-name', (d) => {
                     d.name = countryNames[0][d.id]
                     return countryNames[0][d.id]
@@ -300,10 +296,6 @@ class Map {
                     .transition()
                         .duration(1000)
                         .attr('r', (d) => d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0)
-                d3.selectAll('.map__country')
-                    .transition()
-                        .duration(1000)
-                        .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
 
                 this.$yearTracker.val(this.year)
 
@@ -333,11 +325,6 @@ class Map {
             .transition()
                 .duration(1000)
                 .attr('r', (d) => d[`${this.mode}_${this.year}`] > 0 ? this.radiusScale(d[`${this.mode}_${this.year}`]) : 0)
-
-        d3.selectAll('.map__country')
-            .transition()
-                .duration(1000)
-                .attr('opacity', (d) => d[`${this.mode}_${this.year}`] !== undefined ? 0.4 + d[`${this.mode}_${this.year}`] / 300 * 0.6 : 0.4)
 
         this.$yearTracker.val(this.year)
     }

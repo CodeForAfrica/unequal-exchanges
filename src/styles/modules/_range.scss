@@ -28,7 +28,7 @@ input[type=range]::-ms-track {
 /* Special styling for WebKit/Blink */
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%23ffffff' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border: none;
@@ -40,7 +40,7 @@ input[type=range]::-webkit-slider-thumb {
 
 /* All the same stuff for Firefox */
 input[type=range]::-moz-range-thumb {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%23ffffff' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border: none;
@@ -52,7 +52,7 @@ input[type=range]::-moz-range-thumb {
 
 /* All the same stuff for IE */
 input[type=range]::-ms-thumb {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%232D2E2D' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='16.418px' height='14.219px' viewBox='0 0 16.418 14.219' enable-background='new 0 0 16.418 14.219' xml:space='preserve'%3E%3Cpolygon fill='%23ffffff' points='8.209,0 16.418,14.219 0,14.219 '/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border: none;

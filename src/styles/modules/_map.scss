@@ -7,6 +7,10 @@
     top: 0;
     width: 100%;
 
+    &__body {
+        background: $background-map;
+    }
+
     @include bp(em(480)) {
         left: -20%;
         right: -20%;
@@ -14,6 +18,7 @@
     }
 
     @include has('infographic') {
+        color: $white;
         position: relative;
     }
 
@@ -60,13 +65,13 @@
         &:active,
         &:focus {
             .map__start-text {
-                border-bottom-color: $text;
+                border-bottom-color: $white;
             }
         }
     }
 
     @include has('start-icon') {
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16.67 16.67'%3E%3Ctitle%3Eicon_play%3C/title%3E%3Cpolygon fill='%232d2d2d' points='13.39 8.33 5.28 13.02 5.28 3.65 13.39 8.33'/%3E%3Ccircle fill='none' stroke='%232d2d2d' stroke-miterlimit='10' cx='8.33' cy='8.33' r='7.83'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16.67 16.67'%3E%3Ctitle%3Eicon_play%3C/title%3E%3Cpolygon fill='%23ffffff' points='13.39 8.33 5.28 13.02 5.28 3.65 13.39 8.33'/%3E%3Ccircle fill='none' stroke='%23ffffff' stroke-miterlimit='10' cx='8.33' cy='8.33' r='7.83'/%3E%3C/svg%3E");
         background-position: left middle;
         background-repeat: no-repeat;
         cursor: pointer;
@@ -116,7 +121,7 @@
         }
 
         &:before {
-            background: $text;
+            background: $white;
             content: "";
             display: block;
             height: rem(12);
@@ -128,7 +133,7 @@
         }
 
         &:after {
-            background: $text;
+            background: $white;
             content: "";
             display: block;
             height: rem(1);
