@@ -137,7 +137,7 @@ class Treemap {
         nodes.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} information exchange relationships` : `${d.data.name}: ${d.data.receiving} information exchange relationships`
             })
             .style('display', 'none')
 
@@ -195,7 +195,7 @@ class Treemap {
         nodesEnter.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} information exchange relationships` : `${d.data.name}: ${d.data.receiving} information exchange relationships`
             })
             .style('display', 'none')
 
@@ -224,7 +224,7 @@ class Treemap {
         this.dataNode.append('span')
             .attr('class', 'treemap__node-text')
             .text((d) => {
-                return this.modeSending ? `${d.data.name}: ${d.data.sending} transactions` : `${d.data.name}: ${d.data.receiving} transactions`
+                return this.modeSending ? `${d.data.name}: ${d.data.sending} information exchange relationships` : `${d.data.name}: ${d.data.receiving} information exchange relationships`
             })
             .style('display', 'none')
 

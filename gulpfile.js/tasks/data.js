@@ -14,11 +14,11 @@ module.exports = {
                 for(var j = 0; j < countries.length; j++) {
                     if (countries[j].name === data[i]['sending_country']) {
                         countryHasBeen = true
-                        countries[j].total += parseInt(data[i]['sending_total'], 10)
+                        countries[j].total += 1
                         countries[j].receiving_countries.push({
                             'id': null,
                             'name': data[i]['receiving_country'],
-                            'value': parseInt(data[i]['sending_total'], 10)
+                            'value': 1
                         })
                         break;
                     }
@@ -27,13 +27,13 @@ module.exports = {
                     countries.push({
                         'id': null,
                         'name': data[i]['sending_country'],
-                        'total': parseInt(data[i]['sending_total'], 10),
+                        'total': 1,
                         'receiving_total': 0,
                         'receiving_countries': [
                             {
                                 'id': null,
                                 'name': data[i]['receiving_country'],
-                                'value': parseInt(data[i]['sending_total'], 10)
+                                'value': 1
                             }
                         ],
                         'sending_countries': []
@@ -61,9 +61,9 @@ module.exports = {
                 countries[index].sending_countries.push({
                     'id': ids.indexOf(data[i]['sending_country']),
                     'name': data[i]['sending_country'],
-                    'value': parseInt(data[i]['sending_total'], 10)
+                    'value': 1
                 })
-                countries[index].receiving_total += parseInt(data[i]['sending_total'], 10)
+                countries[index].receiving_total += 1
             }
 
             fs.writeFile(join(config.scripts.src, 'data/transactions.json'), JSON.stringify(countries), function(err) {
@@ -87,11 +87,11 @@ module.exports = {
                 if (sendingIndex >= 0) {
                     var sendingExists = countries[sendingIndex].children.map(function(e) { return e.name; }).indexOf(data[i]['sending_country'])
                     if (sendingExists >= 0) {
-                        countries[sendingIndex]['children'][sendingExists]['sending'] += parseInt(data[i]['sending_total'], 10)
+                        countries[sendingIndex]['children'][sendingExists]['sending'] += 1
                     } else {
                         countries[sendingIndex]['children'].push({
                             'name': data[i]['sending_country'],
-                            'sending': data[i]['sending_total'],
+                            'sending': 1,
                             'receiving': 0,
                             'income': countries[sendingIndex]['name']
                         })
@@ -100,12 +100,12 @@ module.exports = {
                 if (receivingIndex >= 0) {
                     var receivingExists = countries[receivingIndex].children.map(function(e) { return e.name; }).indexOf(data[i]['receiving_country'])
                     if (receivingExists >= 0) {
-                        countries[receivingIndex]['children'][receivingExists]['receiving'] += parseInt(data[i]['sending_total'], 10)
+                        countries[receivingIndex]['children'][receivingExists]['receiving'] += 1
                     } else {
                         countries[receivingIndex]['children'].push({
                             'name': data[i]['receiving_country'],
                             'sending': 0,
-                            'receiving': data[i]['sending_total'],
+                            'receiving': 1,
                             'income': countries[receivingIndex]['name']
                         })
                     }

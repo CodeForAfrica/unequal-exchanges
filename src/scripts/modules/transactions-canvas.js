@@ -222,7 +222,7 @@ class Transactions {
 
     addCountries() {
         $.each(sendingCountries, (index, country) => {
-            const $countryDiv = $(`<div><span class="transactions__name">${country.name}</span><span class="transactions__count"></span><span class="transactions__sending"></span></div>`)
+            const $countryDiv = $(`<div><span class="transactions__name">${country.name}</span><span class="transactions__sending"></span></div>`)
             $countryDiv.addClass('transactions__country')
             $countryDiv.attr('id', 'country-' + country.id)
             $countryDiv.attr('data-total', country.total)
@@ -251,24 +251,10 @@ class Transactions {
                 })
                 return receivingArray
             })
-            $countryDiv.attr('data-receiving-values', () => {
-                let receivingArray = []
-                $.each(country.receiving_countries, (index, receivingCountry) => {
-                    receivingArray.push(receivingCountry.value)
-                })
-                return receivingArray
-            })
             $countryDiv.attr('data-sending', () => {
                 let sendingArray = []
                 $.each(country.sending_countries, (index, sendingCountry) => {
                     sendingArray.push(sendingCountry.id)
-                })
-                return sendingArray
-            })
-            $countryDiv.attr('data-sending-values', () => {
-                let sendingArray = []
-                $.each(country.sending_countries, (index, sendingCountry) => {
-                    sendingArray.push(sendingCountry.value)
                 })
                 return sendingArray
             })
@@ -354,11 +340,12 @@ class Transactions {
             const modeString = this.modeSending ? 'receiving' : 'sending'
             this.$activeName.text($country.data('name'))
             const count = $country.data(`${modeString}CountryCount`)
-            const countString =  count > 1 ? `${count} countries` : `${count} country`
+            const countString =  count > 1 ? 'other countries' : 'another country'
+            const exchangeCountString = $country.data('total') > 1 ? 'agreements' : 'agreement'
             if (this.modeSending) {
-                this.$activeTotal.text(`reports to send ${$country.data('total')} transactions to ${countString}`)
+                this.$activeTotal.text(`has ${$country.data('total')} information exchange ${exchangeCountString} to send information to ${countString}`)
             } else {
-                this.$activeTotal.text(`reports to receive ${$country.data('receivingTotal')} transactions from ${countString}`)
+                this.$activeTotal.text(`has ${$country.data('receivingTotal')} information exchange ${exchangeCountString} to receive information from ${countString}`)
             }
             this.$active.addClass('active')
             this.$instructions.addClass('hide')
@@ -370,13 +357,11 @@ class Transactions {
             const $activeCountry = $(`#country-${id}`)
             
             const linkedIds = $activeCountry.data(modeString).toString().split(',')
-            const linkedValues = $activeCountry.data(`${modeString}Values`).toString().split(',')
             
             $.each(linkedIds, (index, countryId) => {
                 const $linkedCountry = $(`#country-${countryId}`)
                 $linkedCountry.addClass('linked').removeClass('hide')
-                $linkedCountry.find('.transactions__count').text(`${linkedValues[index]}`)
-                const linkedWidth = COUNTRY_WIDTH * Math.sqrt(linkedValues[index] / MAX_TOTAL)
+                const linkedWidth = COUNTRY_WIDTH * Math.sqrt(1 / MAX_TOTAL)
                 $linkedCountry.find('.transactions__sending, .transactions__receiving').css({
                     'width': linkedWidth,
                     'height': linkedWidth

@@ -262,7 +262,7 @@ class Map {
 
     addOverlayTransactionsText(value, y, SHOW_RIGHT) {
         this.overlay.append('text')
-            .text(value === 1 ? value + ' transaction' : value + ' transactions')
+            .text(value === 1 ? value + ' relationship' : value + ' relationships')
             .attr('font-family', 'proxima-nova')
             .attr('font-size', '11')
             .attr('x', SHOW_RIGHT ? 55 : 35)
